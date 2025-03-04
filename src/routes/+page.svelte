@@ -1,182 +1,96 @@
 <script lang="ts">
-    let webhookText = $state("");
-    let responseMessage = $state("");
-    let isSuccess = $state(false);
-    let isError = $state(false);
+    import { 
+        webhookText, 
+        sendWebhook, 
+        responseMessage, 
+        isSuccess, 
+        isError, 
+        audioUrl, 
+        isRecording, 
+        startRecording, 
+        stopRecording 
+    } from '$lib/webhook';
     
-    // Audio recording states
-    let mediaRecorder = $state(null);
-    let audioChunks = $state([]);
-    let isRecording = $state(false);
-    let audioBlob = $state(null);
-    let audioUrl = $state("");
-
-    async function startRecording() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            audioChunks = [];
-            mediaRecorder = new MediaRecorder(stream);
-            
-            mediaRecorder.ondataavailable = (event) => {
-                audioChunks = [...audioChunks, event.data];
-            };
-            
-            mediaRecorder.onstop = () => {
-                audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                audioUrl = URL.createObjectURL(audioBlob);
-                webhookText = "Audio aufgenommen und bereit zum Senden";
-            };
-            
-            mediaRecorder.start();
-            isRecording = true;
-        } catch (error) {
-            console.error("Error accessing microphone:", error);
-            responseMessage = `Mikrofon-Zugriffsfehler: ${error.message}`;
-            isError = true;
-        }
-    }
-    
-    function stopRecording() {
-        if (mediaRecorder && isRecording) {
-            mediaRecorder.stop();
-            isRecording = false;
-            // Close audio tracks to release microphone
-            mediaRecorder.stream.getTracks().forEach(track => track.stop());
-        }
-    }
-
-    async function sendWebhook(event: Event) {
+    // Event handlers remain similar
+    function handleSubmit(event: SubmitEvent) {
         event.preventDefault();
-        const url = "http://localhost:5678/webhook-test/981ad22c-97a6-4f32-a0d9-c8e70cebcdb4";
-        responseMessage = "";
-        isSuccess = false;
-        isError = false;
-        
-        try {
-            let formData = new FormData();
-            formData.append("sessionId", "94mb1kt8np");
-            
-            if (audioBlob) {
-                console.log("Sending audio data...");
-                
-                formData.append("audio", audioBlob, "recording.webm");
-            } else {
-                formData.append("message", webhookText);
-            }
-            
-            const response = await fetch(url, {
-                method: "POST",
-                body: formData
-            });
-            
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error("Webhook request failed with status:", response.status, errorText);
-                responseMessage = `Failed: ${response.status} ${response.statusText}`;
-                isError = true;
-            } else {
-                console.log("Webhook sent successfully");
-                responseMessage = await response.text();
-                isSuccess = true;
-                // Reset audio data after sending
-                audioBlob = null;
-                audioUrl = "";
-            }
-        } catch (error) {
-            console.error("Error sending webhook:", error);
-            responseMessage = `Error: ${error.message}`;
-            isError = true;
-        }
+        sendWebhook(event);
+    }
+
+    // Handler for audio submission
+    function sendAudioWebhook() {
+        sendWebhook(new Event('submit'));
     }
 </script>
 
-<main class="container">
-    <h1>meetly.enis</h1>
+<main class="container mx-auto px-4 py-8 max-w-2xl">
+    <h1 class="text-3xl font-bold mb-6">meetly.enis</h1>
 
-    <!-- Webhook textbox form -->
-    <form class="row" onsubmit={sendWebhook}>
+    <!-- Webhook textbox form with proper event handling -->
+    <form class="flex flex-col sm:flex-row gap-2 mb-6" on:submit={handleSubmit}>
         <input
             id="webhook-input"
             placeholder="Enter text for webhook..."
-            bind:value={webhookText}
+            bind:value={$webhookText}
+            aria-label="Webhook message text"
+            class="flex-1 px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <button type="submit">Send Webhook</button>
+        <button 
+            type="submit" 
+            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+        >
+            Send Webhook
+        </button>
     </form>
     
-    <!-- Audio recording controls -->
-    <div class="audio-controls">
+    <!-- Audio recording controls with improved accessibility -->
+    <div class="flex flex-col gap-2 mb-6">
         <button 
             type="button" 
-            onclick={isRecording ? stopRecording : startRecording}
-            class={isRecording ? 'recording' : ''}
+            on:click={$isRecording ? stopRecording : startRecording}
+            class={`px-4 py-2 rounded transition-colors ${
+                $isRecording 
+                ? 'bg-red-500 hover:bg-red-600 text-white' 
+                : 'bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600'
+            }`}
+            aria-pressed={$isRecording}
         >
-            {isRecording ? 'Aufnahme stoppen' : 'Sprachaufnahme starten'}
+            {$isRecording ? 'Aufnahme stoppen' : 'Sprachaufnahme starten'}
         </button>
         
-        {#if audioUrl}
-            <div class="audio-preview">
-                <audio controls src={audioUrl}></audio>
-                <button type="button" onclick={() => sendWebhook(new Event('submit'))}>
+        {#if $audioUrl}
+            <div class="flex flex-col gap-2 mt-2">
+                <audio 
+                    controls 
+                    src={$audioUrl} 
+                    preload="metadata"
+                    class="w-full"
+                ></audio>
+                <button 
+                    type="button" 
+                    on:click={sendAudioWebhook}
+                    class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+                >
                     Aufnahme senden
                 </button>
             </div>
         {/if}
     </div>
     
-    {#if responseMessage}
-        <div class="response-message {isSuccess ? 'success' : ''} {isError ? 'error' : ''}">
-            {responseMessage}
+    <!-- Response message with ARIA live region for accessibility -->
+    {#if $responseMessage}
+        <div 
+            class={`mt-4 p-3 rounded border ${
+                $isSuccess 
+                ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100 dark:border-green-800' 
+                : $isError 
+                ? 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-100 dark:border-red-800'
+                : 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-100'
+            }`}
+            role="status"
+            aria-live="polite"
+        >
+            {$responseMessage}
         </div>
     {/if}
 </main>
-
-<style>
-    .response-message {
-        margin-top: 1rem;
-        padding: 0.5rem;
-        border-radius: 4px;
-    }
-    
-    .success {
-        background-color: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
-    
-    .error {
-        background-color: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-    }
-    
-    .audio-controls {
-        margin-top: 1rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .audio-preview {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        margin-top: 0.5rem;
-    }
-    
-    button.recording {
-        background-color: #f44336;
-        color: white;
-    }
-    
-    @media (prefers-color-scheme: dark) {
-        .success {
-            background-color: #1e4a30;
-            color: #d4edda;
-        }
-        
-        .error {
-            background-color: #4a1e1e;
-            color: #f8d7da;
-        }
-    }
-</style>
