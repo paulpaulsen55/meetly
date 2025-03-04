@@ -13,15 +13,14 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1.1,
       "position": [
-        40,
-        380
+        -320,
+        360
       ],
       "webhookId": "981ad22c-97a6-4f32-a0d9-c8e70cebcdb4"
     },
     {
       "parameters": {
-        "respondWith": "json",
-        "responseBody": "={\n  \"sessionId\": \"{{ $('Data').first().json.sessionId }}\",\n  \"agentMessage\": \"{{ $json.output }}\"\n}",
+        "respondWith": "allIncomingItems",
         "options": {}
       },
       "id": "849c6bac-0dd1-4ba3-8326-a3d4f236519d",
@@ -29,8 +28,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        1260,
-        400
+        1080,
+        320
       ]
     },
     {
@@ -40,25 +39,68 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        700,
-        400
+        560,
+        -20
       ]
     },
     {
       "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.contactMessage }}",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d23dcfe6-87e4-4dad-b9cc-c1bbb52291eb",
+              "name": "sessionId",
+              "value": "={{ $json.body.sessionId }}",
+              "type": "string"
+            },
+            {
+              "id": "7e1e356e-1ffc-4ffe-8643-4735f4e256f2",
+              "name": "chatInput",
+              "value": "={{ $ifEmpty($('Webhook').item.json.body.message, \"\") }}",
+              "type": "string"
+            }
+          ]
+        },
         "options": {
-          "systemMessage": "You are an AI agent designed to enhance user experience with the \"meetly\" app, which seamlessly combines the functionalities of a personal diary and a daily assistant. Your primary objectives are to ensure accurate, context-aware, and empathetic responses.\n\nEvent JSON Format: Ensure that any events mentioned in the response are provided in JSON format with the message and the time they happen.\n\nExample JSON format:\n\n{\n  \"event\": {\n    \"message\": \"Your streak has reached 10 days!\",\n    \"time\": \"2025-03-04T10:03:00Z\"\n  }\n}"
+          "includeBinary": true
         }
       },
-      "id": "0ae0c80e-9844-4425-9994-425143bcf0a9",
-      "name": "AI Agent",
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 1.3,
+      "id": "b5d89a60-2855-4801-95bf-b4b435fac51c",
+      "name": "Set with SessionId",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
       "position": [
-        880,
-        400
+        340,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d23dcfe6-87e4-4dad-b9cc-c1bbb52291eb",
+              "name": "sessionId",
+              "value": "={{(+new Date).toString(36).slice(-5) + Math.random().toString(36).substr(2, 5)}}",
+              "type": "string"
+            },
+            {
+              "id": "90072504-b82a-4514-93ec-7d907397361c",
+              "name": "chatInput",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f1d6aa53-705c-4d15-824f-b51d03e0261e",
+      "name": "Set with GeneratedID",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        340,
+        60
       ]
     },
     {
@@ -73,7 +115,7 @@
           "conditions": [
             {
               "id": "a7b94cfd-bd75-4a87-82f2-d903129bd236",
-              "leftValue": "={{ $json.body.sessionId }}",
+              "leftValue": "={{ $('Webhook')..json.body.sessionId }}",
               "rightValue": "",
               "operator": {
                 "type": "string",
@@ -91,80 +133,207 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
+        120,
+        -40
+      ]
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        400,
+        340
+      ],
+      "id": "3ff28981-c033-4999-9872-5917f3010b71",
+      "name": "message"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7239f277-ae85-490c-8c4d-9fca5464d416",
+              "name": "message",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
         260,
-        380
-      ]
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "d23dcfe6-87e4-4dad-b9cc-c1bbb52291eb",
-              "name": "sessionId",
-              "value": "={{ $json.body.sessionId }}",
-              "type": "string"
-            },
-            {
-              "id": "90072504-b82a-4514-93ec-7d907397361c",
-              "name": "contactMessage",
-              "value": "={{ $json.body.contactMessage }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "b5d89a60-2855-4801-95bf-b4b435fac51c",
-      "name": "Set with SessionId",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.3,
-      "position": [
-        480,
-        320
-      ]
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "d23dcfe6-87e4-4dad-b9cc-c1bbb52291eb",
-              "name": "sessionId",
-              "value": "={{(+new Date).toString(36).slice(-5) + Math.random().toString(36).substr(2, 5)}}",
-              "type": "string"
-            },
-            {
-              "id": "90072504-b82a-4514-93ec-7d907397361c",
-              "name": "contactMessage",
-              "value": "={{ $json.body.contactMessage }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "f1d6aa53-705c-4d15-824f-b51d03e0261e",
-      "name": "Set with GeneratedID",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.3,
-      "position": [
-        480,
         500
-      ]
+      ],
+      "id": "12e7bb41-a485-435d-9308-f05a18e9a309",
+      "name": "Set text message"
     },
     {
       "parameters": {
-        "modelName": "models/gemini-2.0-flash",
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.message }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    },
+                    "id": "c9e40ed9-e17a-499f-a5a6-963c01d5c796"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "9b3bc32d-e2eb-45a0-a95d-2c8b2b1e57f1",
+                    "leftValue": "={{ $ifEmpty($('Webhook').item.binary.audio, \"\") }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": "={{ true }}",
+              "outputKey": "audio"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -100,
+        360
+      ],
+      "id": "60b519d5-1b0f-41c1-bcae-6d420359b8bc",
+      "name": "Switch text/audio",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "binaryPropertyName": "=audio",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        100,
+        500
+      ],
+      "id": "48ed7799-eb4d-41c2-9f44-194360f84fa0",
+      "name": "OpenAI whisper",
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "retryOnFail": false,
+      "notesInFlow": false,
+      "credentials": {
+        "openAiApi": {
+          "id": "ulC0gVqcWHawrtlE",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "42ccbfaf-36f2-4787-b191-449936be458f",
+              "name": "message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        100,
+        340
+      ],
+      "id": "69bc0df5-bb37-4993-be7e-9c8e696ec1dd",
+      "name": "Set text message1"
+    },
+    {
+      "parameters": {
+        "content": "## Buffered memory sessionId",
+        "height": 400,
+        "width": 660
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -180
+      ],
+      "id": "5c589430-233f-48bf-8eac-f9c9ac289ddd",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a helpful assistant. create json format of the event with date and topic as their respective fields"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        600,
+        340
+      ],
+      "id": "946eb97c-3eaf-42a6-808d-3e56df0ff087",
+      "name": "AI Agent",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-lite",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        840,
-        620
+        600,
+        520
       ],
-      "id": "39e8df67-d8ee-4584-b17a-e1ab223139d0",
+      "id": "528d194a-e2a4-4d83-82de-034663902313",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
@@ -174,26 +343,52 @@
       }
     },
     {
-      "parameters": {},
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
+      "parameters": {
+        "options": {
+          "prompt": "Instructions:\n--------------\n{instructions}\n--------------\nCompletion:\n--------------\n{completion}\n--------------\n\nAbove, the Completion did not satisfy the constraints given in the Instructions.\nError:\n--------------\n{error}\n--------------\n\nPlease try again. Please only respond with an answer that satisfies the constraints laid out in the Instructions:"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
       "position": [
-        980,
-        620
+        740,
+        560
       ],
-      "id": "13e7ee0f-4427-4239-ab70-a4c0fdbcd142",
-      "name": "Window Buffer Memory"
+      "id": "1ae89301-b4ab-4475-81a6-3cacace6d714",
+      "name": "Auto-fixing Output Parser"
     },
     {
-      "parameters": {},
-      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
-      "typeVersion": 1.1,
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"date\": \"20.02.2025\",\n\t\"topic\": \"Uni\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
       "position": [
-        1140,
-        620
+        940,
+        720
       ],
-      "id": "4dbdfe73-41f8-4000-835c-4f93c6324b51",
-      "name": "HTTP Request"
+      "id": "270a430b-637d-4581-96b5-78b448e548c8",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        760,
+        720
+      ],
+      "id": "e956f0f0-557a-413b-b37f-ab97e002665a",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "wqym0GcoV64BnJ0k",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -202,7 +397,7 @@
       "main": [
         [
           {
-            "node": "If has SessionId",
+            "node": "Switch text/audio",
             "type": "main",
             "index": 0
           }
@@ -211,42 +406,7 @@
     },
     "Data": {
       "main": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent": {
-      "main": [
-        [
-          {
-            "node": "Respond to Webhook",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If has SessionId": {
-      "main": [
-        [
-          {
-            "node": "Set with SessionId",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Set with GeneratedID",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Set with SessionId": {
@@ -271,6 +431,105 @@
         ]
       ]
     },
+    "If has SessionId": {
+      "main": [
+        [
+          {
+            "node": "Set with SessionId",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set with GeneratedID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set text message": {
+      "main": [
+        [
+          {
+            "node": "message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch text/audio": {
+      "main": [
+        [
+          {
+            "node": "Set text message1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OpenAI whisper",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "OpenAI whisper": {
+      "main": [
+        [
+          {
+            "node": "Set text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "message": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set text message1": {
+      "main": [
+        [
+          {
+            "node": "message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Google Gemini Chat Model": {
       "ai_languageModel": [
         [
@@ -282,23 +541,34 @@
         ]
       ]
     },
-    "Window Buffer Memory": {
-      "ai_memory": [
+    "Auto-fixing Output Parser": {
+      "ai_outputParser": [
         [
           {
             "node": "AI Agent",
-            "type": "ai_memory",
+            "type": "ai_outputParser",
             "index": 0
           }
         ]
       ]
     },
-    "HTTP Request": {
-      "ai_tool": [
+    "Structured Output Parser": {
+      "ai_outputParser": [
         [
           {
-            "node": "AI Agent",
-            "type": "ai_tool",
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_languageModel",
             "index": 0
           }
         ]
@@ -307,9 +577,12 @@
   },
   "active": true,
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "timezone": "Europe/Berlin",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": -1
   },
-  "versionId": "2ba9247e-a74d-40af-8768-9cf6cc5f0ec2",
+  "versionId": "78fc88b4-e797-4577-9c42-02ddd2ed4cd2",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ae8454a0e78c5c8d46e957159b16f1454ba1b44b9a13d0930a8c55ef47b4dfef"
