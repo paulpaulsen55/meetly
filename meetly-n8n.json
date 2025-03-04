@@ -8,13 +8,13 @@
         "responseMode": "responseNode",
         "options": {}
       },
-      "id": "58cf9e79-3dcb-49e4-9da0-6c0d1ce56c61",
+      "id": "9071ac41-c4f4-403d-8f83-ca3d16893d73",
       "name": "Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1.1,
       "position": [
-        40,
-        380
+        -340,
+        -20
       ],
       "webhookId": "981ad22c-97a6-4f32-a0d9-c8e70cebcdb4"
     },
@@ -24,41 +24,24 @@
         "responseBody": "={\n  \"sessionId\": \"{{ $('Data').first().json.sessionId }}\",\n  \"agentMessage\": \"{{ $json.output }}\"\n}",
         "options": {}
       },
-      "id": "849c6bac-0dd1-4ba3-8326-a3d4f236519d",
+      "id": "91ce7fb0-112f-44f7-80f7-4ffefc3104c5",
       "name": "Respond to Webhook",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        1260,
-        400
+        880,
+        0
       ]
     },
     {
       "parameters": {},
-      "id": "289870fd-37ed-40ca-95d6-f838ed26a2f0",
+      "id": "8aa62edb-c573-4efd-b29d-65d07087ec18",
       "name": "Data",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        700,
-        400
-      ]
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.contactMessage }}",
-        "options": {
-          "systemMessage": "You are an AI agent designed to enhance user experience with the \"meetly\" app, which seamlessly combines the functionalities of a personal diary and a daily assistant. Your primary objectives are to ensure accurate, context-aware, and empathetic responses.\n\nEvent JSON Format: Ensure that any events mentioned in the response are provided in JSON format with the message and the time they happen.\n\nExample JSON format:\n\n{\n  \"event\": {\n    \"message\": \"Your streak has reached 10 days!\",\n    \"time\": \"2025-03-04T10:03:00Z\"\n  }\n}"
-        }
-      },
-      "id": "0ae0c80e-9844-4425-9994-425143bcf0a9",
-      "name": "AI Agent",
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 1.3,
-      "position": [
-        880,
-        400
+        320,
+        0
       ]
     },
     {
@@ -86,13 +69,13 @@
         },
         "options": {}
       },
-      "id": "656bb300-a50c-4bf3-ac53-693dfc6db526",
+      "id": "e0276bb4-4f0c-40c5-887d-78b0a1f21363",
       "name": "If has SessionId",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        260,
-        380
+        -120,
+        -20
       ]
     },
     {
@@ -115,13 +98,13 @@
         },
         "options": {}
       },
-      "id": "b5d89a60-2855-4801-95bf-b4b435fac51c",
+      "id": "13e565d5-56e7-4e35-9f1f-a13cb85ccd0c",
       "name": "Set with SessionId",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.3,
       "position": [
-        480,
-        320
+        100,
+        -80
       ]
     },
     {
@@ -144,14 +127,42 @@
         },
         "options": {}
       },
-      "id": "f1d6aa53-705c-4d15-824f-b51d03e0261e",
+      "id": "3c6a9dc3-897e-459a-9c3b-b2658650ca66",
       "name": "Set with GeneratedID",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.3,
       "position": [
-        480,
-        500
+        100,
+        100
       ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.contactMessage }}",
+        "options": {
+          "systemMessage": "You are an AI agent designed to enhance user experience with the \"meetly\" app, which seamlessly combines the functionalities of a personal diary and a daily assistant. Your primary objectives are to ensure accurate, context-aware, and empathetic responses.\n\nEvent JSON Format: Ensure that any events mentioned in the response are provided in JSON format with the message and the time they happen."
+        }
+      },
+      "id": "d6a7b7cc-d1cb-4216-addb-800135bcc81e",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.3,
+      "position": [
+        500,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        620,
+        240
+      ],
+      "id": "b61a1e6c-8033-4a0f-9279-b350679f547f",
+      "name": "Window Buffer Memory"
     },
     {
       "parameters": {
@@ -161,39 +172,17 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        840,
-        620
+        460,
+        220
       ],
-      "id": "39e8df67-d8ee-4584-b17a-e1ab223139d0",
+      "id": "7b6de48e-76b8-4c6c-a72f-c770593666bd",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
-          "id": "wqym0GcoV64BnJ0k",
+          "id": "oby6MMY3dgZaujEN",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
-    },
-    {
-      "parameters": {},
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        980,
-        620
-      ],
-      "id": "13e7ee0f-4427-4239-ab70-a4c0fdbcd142",
-      "name": "Window Buffer Memory"
-    },
-    {
-      "parameters": {},
-      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
-      "typeVersion": 1.1,
-      "position": [
-        1140,
-        620
-      ],
-      "id": "4dbdfe73-41f8-4000-835c-4f93c6324b51",
-      "name": "HTTP Request"
     }
   ],
   "pinData": {},
@@ -214,17 +203,6 @@
         [
           {
             "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent": {
-      "main": [
-        [
-          {
-            "node": "Respond to Webhook",
             "type": "main",
             "index": 0
           }
@@ -271,17 +249,6 @@
         ]
       ]
     },
-    "Google Gemini Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Window Buffer Memory": {
       "ai_memory": [
         [
@@ -293,12 +260,23 @@
         ]
       ]
     },
-    "HTTP Request": {
-      "ai_tool": [
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
         [
           {
             "node": "AI Agent",
-            "type": "ai_tool",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
             "index": 0
           }
         ]
@@ -309,11 +287,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "2ba9247e-a74d-40af-8768-9cf6cc5f0ec2",
+  "versionId": "a1afe6d2-c630-452e-881c-0577a27a70dd",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "ae8454a0e78c5c8d46e957159b16f1454ba1b44b9a13d0930a8c55ef47b4dfef"
+    "instanceId": "0efefaf848cb55b47d610315256d7fa8b63f4f8843777a47ca589bc607a113a5"
   },
-  "id": "dFLPyHQwgUwZFymN",
+  "id": "T5zb3UkO3cdcS6tN",
   "tags": []
 }
