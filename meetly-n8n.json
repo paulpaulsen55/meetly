@@ -8,7 +8,7 @@
         "responseMode": "responseNode",
         "options": {}
       },
-      "id": "58cf9e79-3dcb-49e4-9da0-6c0d1ce56c61",
+      "id": "9071ac41-c4f4-403d-8f83-ca3d16893d73",
       "name": "Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1.1,
@@ -23,7 +23,7 @@
         "respondWith": "allIncomingItems",
         "options": {}
       },
-      "id": "849c6bac-0dd1-4ba3-8326-a3d4f236519d",
+      "id": "91ce7fb0-112f-44f7-80f7-4ffefc3104c5",
       "name": "Respond to Webhook",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
@@ -34,7 +34,7 @@
     },
     {
       "parameters": {},
-      "id": "289870fd-37ed-40ca-95d6-f838ed26a2f0",
+      "id": "8aa62edb-c573-4efd-b29d-65d07087ec18",
       "name": "Data",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -128,7 +128,7 @@
         },
         "options": {}
       },
-      "id": "656bb300-a50c-4bf3-ac53-693dfc6db526",
+      "id": "e0276bb4-4f0c-40c5-887d-78b0a1f21363",
       "name": "If has SessionId",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
@@ -136,6 +136,17 @@
         120,
         -40
       ]
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        400,
+        340
+      ],
+      "id": "3ff28981-c033-4999-9872-5917f3010b71",
+      "name": "message"
     },
     {
       "parameters": {},
@@ -337,7 +348,7 @@
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
-          "id": "wqym0GcoV64BnJ0k",
+          "id": "oby6MMY3dgZaujEN",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -585,8 +596,8 @@
   "versionId": "78fc88b4-e797-4577-9c42-02ddd2ed4cd2",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "ae8454a0e78c5c8d46e957159b16f1454ba1b44b9a13d0930a8c55ef47b4dfef"
+    "instanceId": "0efefaf848cb55b47d610315256d7fa8b63f4f8843777a47ca589bc607a113a5"
   },
-  "id": "dFLPyHQwgUwZFymN",
+  "id": "T5zb3UkO3cdcS6tN",
   "tags": []
 }
