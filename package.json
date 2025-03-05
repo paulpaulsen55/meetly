@@ -15,7 +15,8 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.0.9",
     "@tauri-apps/api": "^2",
-    "@tauri-apps/plugin-opener": "^2"
+    "@tauri-apps/plugin-opener": "^2",
+    "lucide-svelte": "^0.477.0"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "^3.0.8",

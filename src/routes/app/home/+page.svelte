@@ -1,4 +1,10 @@
 <script lang="ts">
+    import Header from '$lib/components/Header.svelte';
+    import StreakCounter from '$lib/components/StreakCounter.svelte';
+    import WeekStreak from '$lib/components/WeekStreak.svelte';
+    import UpcomingEvents from '$lib/components/UpcomingEvents.svelte';
+    import ActionButtons from '$lib/components/InputButtons.svelte';
+
     import { 
         webhookText, 
         sendWebhook, 
@@ -22,6 +28,14 @@
         sendWebhook(new Event('submit'));
     }
 </script>
+
+<main class="min-h-screen bg-white p-4 max-w-md mx-auto">
+    <Header name="User" />
+    <StreakCounter />
+    <WeekStreak />
+    <UpcomingEvents />
+    <ActionButtons />
+</main>
 
 <main class="container mx-auto px-4 py-8 max-w-2xl">
     <h1 class="text-3xl font-bold mb-6">meetly.enis</h1>
