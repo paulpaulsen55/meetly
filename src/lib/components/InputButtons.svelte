@@ -30,6 +30,7 @@
     let isInteractingWithForm = false;
 
     const audioSent = writable(false);
+    const messageSent = writable(false);
 
     // Add event listeners for drag on component mount
     onMount(() => {
@@ -50,7 +51,13 @@
     
     function handleSubmit(event: SubmitEvent) {
         event.preventDefault();
+        messageSent.set(true);
         sendWebhook(event);
+
+        // Reset the button after a delay
+        setTimeout(() => {
+            messageSent.set(false);
+        }, 3000);
     }
 
     function sendAudioWebhook() {
@@ -164,7 +171,7 @@
     <button 
         on:click={openMicDrawer} 
         class="w-24 h-24 bg-blue-500 text-white rounded-l-3xl rounded-r-none shadow-lg 
-               hover:bg-blue-600 active:bg-blue-700 active:scale-95 transition-all duration-150"
+               hover:bg-blue-600 active:bg-blue-700 active:scale-95 transition-all duration-150 cursor-pointer"
         aria-label="Activate microphone"
     >
         <Mic size={34} class="block mx-auto" />
@@ -174,7 +181,7 @@
     <button 
         on:click={openMessageDrawer} 
         class="w-24 h-24 bg-gray-100 text-black rounded-r-3xl rounded-l-none shadow-lg
-               hover:bg-gray-200 active:bg-gray-300 active:scale-95 transition-all duration-150"
+               hover:bg-gray-200 active:bg-gray-300 active:scale-95 transition-all duration-150 cursor-pointer"
         aria-label="Open message input"
     >
         <MessageSquareMore size={34} class="block mx-auto" />
@@ -212,7 +219,7 @@
             </h3>
             <button 
                 on:click={closeDrawer}
-                class="p-1 hover:bg-gray-100 rounded-full"
+                class="p-1 hover:bg-gray-100 rounded-full cursor-pointer"
                 aria-label="Close drawer"
             >
                 <X size={24} />
@@ -230,7 +237,7 @@
                     <button 
                         type="button"
                         on:click={$isRecording ? stopRecording : startRecording}
-                        class={`w-24 h-24 rounded-full mx-auto flex items-center justify-center mb-4 
+                        class={`w-24 h-24 rounded-full mx-auto flex items-center justify-center mb-4 cursor-pointer 
                             ${$isRecording 
                             ? 'bg-red-500 hover:bg-red-600 text-white' 
                             : 'bg-gray-200 hover:bg-gray-300'}`}
@@ -252,7 +259,7 @@
                             <button 
                                 type="button" 
                                 on:click={sendAudioWebhook}
-                                class={`px-4 py-2 ${$audioSent ? 'bg-gray-500' : 'bg-green-500 hover:bg-green-600'} text-white rounded transition-colors duration-300`}
+                                class={`px-4 py-2 cursor-pointer ${$audioSent ? 'bg-gray-500' : 'bg-green-500 hover:bg-green-600'} text-white rounded transition-colors duration-300`}
                                 disabled={$audioSent}
                             >
                                 {$audioSent ? 'Sending...' : 'Aufnahme senden'}
@@ -278,7 +285,7 @@
                     {/if}
                 </div>
             
-            {:else if $activeButton === 'message'}
+                {:else if $activeButton === 'message'}
                 <div class="text-center">
                     <form class="flex flex-col sm:flex-row gap-2 mb-6" on:submit={handleSubmit} on:focus={handleFormFocus} on:blur={handleFormBlur}>
                         <input
@@ -287,31 +294,33 @@
                             bind:value={$webhookText}
                             aria-label="Webhook message text"
                             class="flex-1 px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            disabled={$messageSent}
                         />
                         <button 
                             type="submit" 
-                            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                            class={`px-4 py-2 cursor-pointer ${$messageSent ? 'bg-gray-500' : 'bg-blue-500 hover:bg-blue-600'} text-white rounded-lg transition-colors duration-300`}
+                            disabled={$messageSent}
                         >
-                            Send Message
+                            {$messageSent ? 'Sending...' : 'Send Message'}
                         </button>
                     </form>
                     
                     <!-- Response message with ARIA live region for accessibility -->
                     {#if $responseMessage}
-                    <div 
-                        class={`mt-4 p-3 rounded border ${
-                            $isSuccess 
-                            ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100 dark:border-green-800' 
-                            : $isError 
-                            ? 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-100 dark:border-red-800'
-                            : 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-100'
-                        }`}
-                        role="status"
-                        aria-live="polite"
-                    >
-                        {$responseMessage}
-                    </div>
-                {/if}
+                        <div 
+                            class={`mt-4 p-3 rounded border ${
+                                $isSuccess 
+                                ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100 dark:border-green-800' 
+                                : $isError 
+                                ? 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-100 dark:border-red-800'
+                                : 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-100'
+                            }`}
+                            role="status"
+                            aria-live="polite"
+                        >
+                            {$responseMessage}
+                        </div>
+                    {/if}
                 </div>
             {/if}
         </div>
