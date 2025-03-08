@@ -1,7 +1,11 @@
-<script>
+<script lang="ts">
+    import { userProfile } from '$lib/auth';
     import { Settings } from 'lucide-svelte';
-    
-    export let name = '';
+
+    let name = '';
+    userProfile.subscribe((value) => {
+        name = value?.displayname as string;
+    });
 </script>
 
 <header class="flex justify-between items-center mb-4">

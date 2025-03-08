@@ -1,18 +1,7 @@
 <script>
-    import { onMount } from "svelte";
     import { user } from "$lib/auth";
     import { goto } from "$app/navigation";
     import { supabase } from "$lib/supabase";
-
-    onMount(() => {
-        const unsubscribe = user.subscribe((value) => {
-            if (value === null) {
-                goto("/");
-            }
-        });
-
-        return unsubscribe;
-    });
 
     async function handleLogout() {
         await supabase.auth.signOut();

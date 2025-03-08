@@ -2,9 +2,11 @@
     import { supabase } from "$lib/supabase";
     import { goto } from "$app/navigation";
     import { ChevronLeft } from "lucide-svelte";
+    import { user, userProfile } from "$lib/auth";
 
     let email = $state("");
     let password = $state("");
+    let displayname = $state("");
     let loading = $state(false);
     let errorMessage = $state("");
 
@@ -13,12 +15,19 @@
             loading = true;
             errorMessage = "";
 
-            const { data, error } = await supabase.auth.signUp({
+            const { error } = await supabase.auth.signUp({
                 email,
                 password,
             });
-
             if (error) throw error;
+
+            const { error: nameError } =  await supabase.from('user_profiles').insert({
+                displayname: displayname
+            });
+
+            if (nameError) throw nameError;
+
+            //TODO: set intial streak to 0
         } catch (error) {
             errorMessage = error as string;
         } finally {
@@ -45,6 +54,18 @@
         {/if}
         <form onsubmit={handleSignUpWithEmail} class="flex flex-col gap-4">
             <div class="form-group">
+                <label for="displayname">Displayname</label>
+                <input
+                    id="displayname"
+                    type="text"
+                    class="shadow-sm rounded-md w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    bind:value={displayname}
+                    required
+                    minlength="3"
+                    disabled={loading}
+                />
+            </div>
+            <div class="form-group">
                 <label for="email">E-Mail</label>
                 <input
                     id="email"
@@ -56,7 +77,7 @@
                 />
             </div>
             <div class="form-group">
-                <label for="password">Passwort</label>
+                <label for="password">Password</label>
                 <input
                     id="password"
                     type="password"

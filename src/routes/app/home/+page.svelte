@@ -8,7 +8,7 @@
 </script>
 
 <main class="min-h-screen bg-white p-4 max-w-md mx-auto">
-    <Header name="User" />
+    <Header />
     <StreakCounter />
     <WeekStreak />
     <UpcomingEvents />

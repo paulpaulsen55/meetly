@@ -1,5 +1,11 @@
-<script>
-    let streak = 69;
+<script lang="ts">
+    import { userProfile } from "$lib/auth";
+
+    let streak = $state(0);
+    userProfile.subscribe((value) => {
+        streak = value?.streak as number;
+    });
+
 </script>
 
 <div class="bg-gray-100 rounded-xl p-4 mb-4 flex justify-center shadow-lg shadow-blue-300">
