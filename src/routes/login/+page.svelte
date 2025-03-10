@@ -14,7 +14,7 @@
             loading = true;
             errorMessage = "";
 
-            const { data, error } = await supabase.auth.signInWithPassword({
+            const { error } = await supabase.auth.signInWithPassword({
                 email: email,
                 password: password,
             });
@@ -56,7 +56,7 @@
                 />
             </div>
             <div class="form-group">
-                <label for="password">Passwort</label>
+                <label for="password">Password</label>
                 <input
                     id="password"
                     type="password"
