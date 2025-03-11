@@ -1,5 +1,6 @@
 import { get } from 'svelte/store'
 import { userProfile } from './auth'
+import { supabase } from './supabase'
 
 /**
  * Loads the user profile and user data
