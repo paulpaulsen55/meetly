@@ -1,6 +1,6 @@
-import { goto } from "$app/navigation";
 import { user, userProfile } from "$lib/auth";
 import { supabase } from "$lib/supabase";
+import { redirect } from "@sveltejs/kit";
 import { get } from "svelte/store";
 
 /**
@@ -8,34 +8,30 @@ import { get } from "svelte/store";
  * Loads the user profile and user data
  */
 export async function load() {
-    // let userData = null
-    // user.subscribe(value => {
-    //     userData = value
-    // })
+    user.subscribe((value) => {
+        if (!value) {
+            redirect(302, '/');
+        }
+    });
 
-    // const userData = get(user);
-    // console.log("userData", userData);
+    const currentProfile = get(userProfile);
+    if (!currentProfile || !currentProfile.displayname) {
+        const { data: profileData } = await supabase
+            .from('user_profiles')
+            .select("displayname, settings")
+            .single();
     
-    // if (!userData) return goto("/")
+        const { data: streakData } = await supabase
+            .from('user_streaks')
+            .select("streak")
+            .single();
 
-    // const currentProfile = get(userProfile);
-    // if (!currentProfile || !currentProfile.displayname) {
-    //     const { data: profileData } = await supabase
-    //         .from('user_profiles')
-    //         .select("displayname, settings")
-    //         .single();
-    
-    //     const { data: streakData } = await supabase
-    //     .from('user_streaks')
-    //     .select("streak")
-    //     .single();
+        if (!profileData) return
 
-    //     if (!profileData) return
-
-    //     userProfile.set({
-    //         displayname: profileData.displayname,
-    //         settings: profileData.settings,
-    //         streak: streakData ? streakData.streak : 0,
-    //     });
-    // }
+        userProfile.set({
+            displayname: profileData.displayname,
+            settings: profileData.settings,
+            streak: streakData ? streakData.streak : 0,
+        });
+    }
 }

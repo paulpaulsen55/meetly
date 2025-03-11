@@ -1,13 +1,6 @@
 <script>
     import { user } from "$lib/auth";
-    import { goto } from "$app/navigation";
     import { supabase } from "$lib/supabase";
-
-    user.subscribe((value) => {
-        if (!value) {
-            goto('/');
-        }
-    });
 </script>
 
 {#if $user}
