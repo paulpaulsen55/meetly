@@ -25,6 +25,11 @@
                 displayname: displayname
             });
 
+            //insert streak zero
+            await supabase.from('streaks').insert({
+                streak: 0
+            });
+
             if (nameError) throw nameError;
 
             //TODO: set intial streak to 0
