@@ -11,7 +11,7 @@
         <Header />
     </div>
 
-    <div class="flex-grow overflow-y-auto flex flex-col gap-3">
+    <div class="flex-grow flex flex-col gap-3">
         <StreakCounter />
         <WeekStreak />
         <UpcomingEvents />
