@@ -2,11 +2,23 @@
     import { supabase } from "$lib/supabase";
     import { goto } from "$app/navigation";
     import { ChevronLeft } from "lucide-svelte";
+    import type { User } from '@supabase/supabase-js'
+    import { user } from "$lib/auth";
+
 
     let email = $state("");
     let password = $state("");
     let loading = $state(false);
     let errorMessage = $state("");
+
+    // Redirect to home if user is already logged in
+    let userData: User | null = $state(null);
+    user.subscribe((value) => {
+        userData = value;
+        if (userData) {
+            goto("/app/home");
+        }
+    });
 
     async function handleLogin(event: Event) {
         event.preventDefault();
