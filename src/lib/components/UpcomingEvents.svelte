@@ -1,27 +1,40 @@
-<script>
-    let events = [
-      { id: 1, text: '@Morgen Mom besuchen', icon: 'info' },
-      { id: 2, text: '@29.02.25 Klopapier kaufen', icon: 'info' },
-      { id: 3, text: '@69.69.69 Treffen im Park', icon: 'clock' }
-    ];
+<script lang="ts">
+    import { onDestroy } from 'svelte';
+    import { userProfile } from '$lib/auth';
+    import type { EventData } from '$lib/auth';
+    import { Clock, Info } from 'lucide-svelte';
+
+    let events: EventData[] = [];
+    const unsubscribe = userProfile.subscribe((value) => {
+        events = value?.events ?? [];
+    });
+    onDestroy(unsubscribe);
 </script>
 
-<div class="mb-4">
-    <h2 class="text-lg font-semibold mb-2">Upcoming</h2>
-    {#each events as event}
-        <div class="flex items-center justify-between bg-gray-100 p-3 rounded-lg mb-2">
-        <span class="text-sm">{event.text}</span>
-        <button>
-            {#if event.icon === 'info'}
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-            </svg>
+<div class="flex gap-2 mb-4">
+    <div class="w-3/4 bg-gray-50 rounded-3xl p-4 flex flex-col">
+        <h2 class="text-xl font-semibold mb-2 text-center text-gray-400">Upcoming</h2>
+        <div class="border-t border-gray-200 mb-3"></div>
+        
+        <div class="overflow-y-auto">
+            {#if events.length > 0}
+                {#each events as event}
+                    <div class="flex items-center justify-between py-2">
+                        <div class="text-sm"><strong>@{event.date}:</strong> {event.topic}</div>
+                    </div>
+                {/each}
             {:else}
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
-            </svg>
+                <p class="text-sm text-gray-500">No upcoming events</p>
             {/if}
-        </button>
         </div>
-    {/each}
+    </div>
+
+    <div class="w-1/4 flex flex-col gap-4">
+        <div class="h-20 bg-gray-50 rounded-3xl flex items-center justify-center">
+            <Info size={35} />
+        </div>
+        <div class="h-20 bg-gray-50 rounded-3xl flex items-center justify-center">
+            <Clock size={35} />
+        </div>
+    </div>
 </div>
