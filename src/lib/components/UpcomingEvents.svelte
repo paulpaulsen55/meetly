@@ -12,7 +12,7 @@
 </script>
 
 <div class="flex gap-2 mb-4">
-    <div class="w-3/4 bg-gray-50 rounded-3xl p-4 flex flex-col">
+    <div class="w-4/5 bg-gray-50 rounded-3xl p-4 flex flex-col">
         <h2 class="text-xl font-semibold mb-2 text-center text-gray-400">Upcoming</h2>
         <div class="border-t border-gray-200 mb-3"></div>
         
@@ -29,12 +29,12 @@
         </div>
     </div>
 
-    <div class="w-1/4 flex flex-col gap-4">
+    <div class="w-1/5 flex flex-col gap-4">
         <div class="h-20 bg-gray-50 rounded-3xl flex items-center justify-center">
-            <Info size={35} />
+            <Info size={45} />
         </div>
         <div class="h-20 bg-gray-50 rounded-3xl flex items-center justify-center">
-            <Clock size={35} />
+            <Clock size={45} />
         </div>
     </div>
 </div>
