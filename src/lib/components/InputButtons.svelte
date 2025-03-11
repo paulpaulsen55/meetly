@@ -180,7 +180,7 @@
     <!-- Message Button: Gray -->
     <button 
         on:click={openMessageDrawer} 
-        class="w-24 h-24 bg-gray-100 text-black rounded-r-3xl rounded-l-none shadow-lg
+        class="w-24 h-24 bg-gray-50 text-black rounded-r-3xl rounded-l-none shadow-lg
                hover:bg-gray-200 active:bg-gray-300 active:scale-95 transition-all duration-150 cursor-pointer"
         aria-label="Open message input"
     >

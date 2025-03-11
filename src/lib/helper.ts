@@ -16,12 +16,17 @@ export async function loadProfile() {
         const { data: streakData } = await supabase
             .from('user_streaks')
             .select("streak")
-            .single();
+            .maybeSingle();
+
+        const { data: eventData } = await supabase
+            .from('user_events')
+            .select("event, id")
 
         if (!profileData) return
 
         userProfile.set({
             displayname: profileData.displayname,
+            events: eventData ? eventData.map(e => e.event) : [],
             settings: profileData.settings,
             streak: streakData ? streakData.streak : 0,
         });

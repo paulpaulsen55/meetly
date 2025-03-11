@@ -60,7 +60,7 @@
     });
 </script>
 
-<div class="bg-gray-100 rounded-xl p-4 mb-4 flex justify-center shadow-lg shadow-blue-300">
+<div class="bg-gray-50 rounded-3xl p-4 mb-4 flex justify-center shadow-lg shadow-blue-300">
     <div class="flex flex-col items-center">
         <div class="flame-container">
             <svg width="129" height="178" viewBox="0 0 129 171" fill="none" xmlns="http://www.w3.org/2000/svg"
