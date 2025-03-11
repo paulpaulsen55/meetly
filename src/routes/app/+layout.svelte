@@ -1,7 +1,8 @@
 <script>
     import { goto } from "$app/navigation";
     import { user } from "$lib/auth";
-    import { loadProfile, supabase } from "$lib/supabase";
+    import { loadProfile } from "$lib/helper";
+    import { supabase } from "$lib/supabase";
 
     user.subscribe((value) => {
         if (!value) {
