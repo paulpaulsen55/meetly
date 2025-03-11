@@ -8,27 +8,34 @@ import { get } from "svelte/store";
  * Loads the user profile and user data
  */
 export async function load() {
-    const userData = get(user);
-    if (!userData) return goto("/")
+    // let userData = null
+    // user.subscribe(value => {
+    //     userData = value
+    // })
 
-    const currentProfile = get(userProfile);
-    if (!currentProfile || !currentProfile.displayname) {
-        const { data: profileData } = await supabase
-            .from('user_profiles')
-            .select("displayname, settings")
-            .single();
+    // const userData = get(user);
+    // console.log("userData", userData);
     
-        const { data: streakData } = await supabase
-        .from('user_streaks')
-        .select("streak")
-        .single();
+    // if (!userData) return goto("/")
 
-        if (!profileData) return
+    // const currentProfile = get(userProfile);
+    // if (!currentProfile || !currentProfile.displayname) {
+    //     const { data: profileData } = await supabase
+    //         .from('user_profiles')
+    //         .select("displayname, settings")
+    //         .single();
+    
+    //     const { data: streakData } = await supabase
+    //     .from('user_streaks')
+    //     .select("streak")
+    //     .single();
 
-        userProfile.set({
-            displayname: profileData.displayname,
-            settings: profileData.settings,
-            streak: streakData ? streakData.streak : 0,
-        });
-    }
+    //     if (!profileData) return
+
+    //     userProfile.set({
+    //         displayname: profileData.displayname,
+    //         settings: profileData.settings,
+    //         streak: streakData ? streakData.streak : 0,
+    //     });
+    // }
 }

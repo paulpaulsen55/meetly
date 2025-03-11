@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store'
 import { supabase } from '$lib/supabase'
 import type { Session, User } from '@supabase/supabase-js'
+import { goto } from '$app/navigation'
 
 export type UserProfile = {
     streak: number
@@ -19,7 +20,28 @@ supabase.auth.getSession().then(({ data }) => {
 })
 
 // Listen for auth changes
-supabase.auth.onAuthStateChange((event, newSession) => {
+supabase.auth.onAuthStateChange(async (event, newSession) => {
     session.set(newSession)
     user.set(newSession?.user || null)
+
+    if (event == "SIGNED_OUT") {
+        user.set(null)
+        userProfile.set(null)
+        goto('/')
+    } else if (newSession?.user) {
+        const { data: profileData } = await supabase
+            .from('user_profiles')
+            .select('displayname, settings')
+            .single()
+        const { data: streakData } = await supabase
+            .from('user_streaks')
+            .select('streak')
+            .single()
+
+        userProfile.set({
+            displayname: profileData?.displayname || '',
+            settings: profileData?.settings || {},
+            streak: streakData?.streak || 0
+        })
+    }
 })
