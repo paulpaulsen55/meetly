@@ -12,9 +12,9 @@ export async function loadProfile() {
 
     const { data: streakData } = await supabase
         .from('user_streaks')
-        .select("streak")
-        .maybeSingle();
-
+        .select("streak, updated_at")
+        .single();
+  
     const { data: eventData } = await supabase
         .from('user_events')
         .select("event, id")
@@ -25,6 +25,6 @@ export async function loadProfile() {
         displayname: profileData.displayname,
         events: eventData ? eventData.map(e => e.event) : [],
         settings: profileData.settings,
-        streak: streakData ? streakData.streak : 0,
+        streak: streakData ?? { streak: 0, updated_at: '' },
     });
 }

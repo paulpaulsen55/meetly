@@ -9,7 +9,7 @@ export interface EventData {
 }
 
 export type UserProfile = {
-    streak: number
+    streak: {streak: number, updated_at: string}
     events: EventData[]
     displayname: string
     settings: any

@@ -4,7 +4,7 @@
 
     let streak = $state(0);
     userProfile.subscribe((value) => {
-        streak = value?.streak as number;
+        streak = value?.streak.streak as number;
     });
 
     const animationSpeed = 40;
