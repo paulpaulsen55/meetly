@@ -1,4 +1,5 @@
 import { writable, get } from 'svelte/store';
+import { supabase } from './supabase';
 
 interface WebhookResponse {
     message: string;
@@ -61,7 +62,41 @@ export async function sendWebhook(content: Blob | string): Promise<WebhookRespon
             message = `Failed: ${response.status} ${response.statusText}`;
         } else {
             console.log("Webhook sent successfully");
-            message = await response.text();
+            const responseData = await response.text();
+            message = responseData;
+            
+            try {
+                let parsedData;
+                try {
+                    const parsed = JSON.parse(responseData);
+                    
+                    if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].output) {
+                        parsedData = parsed[0].output;
+                    } else {
+                        parsedData = JSON.parse(responseData);
+                    }
+                    
+                    console.log("Parsed webhook response:", parsedData);
+                } catch (parseError) {
+                    console.error("Error parsing webhook response:", parseError);
+                    parsedData = { error: "Failed to parse response", original: responseData };
+                }
+                
+                const { error } = await supabase
+                    .from('user_events')
+                    .insert({
+                        event: parsedData
+                    });
+                
+                if (error) {
+                    console.error("Error saving event to Supabase:", error);
+                } else {
+                    success = true;
+                    console.log("Event saved to Supabase successfully");
+                }
+            } catch (dbError) {
+                console.error("Error connecting to Supabase:", dbError);
+            }
         }
     } catch (error) {
         console.error("Error sending webhook:", error);
