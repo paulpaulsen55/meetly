@@ -13,14 +13,14 @@
 
 <div class="flex gap-2 mb-4">
     <div class="w-4/5 bg-gray-50 rounded-3xl p-4 flex flex-col">
-        <h2 class="text-xl font-semibold mb-2 text-center text-gray-400">Upcoming</h2>
+        <h2 class="text-2xl font-semibold mb-2 text-center text-gray-400">Upcoming</h2>
         <div class="border-t border-gray-200 mb-3"></div>
         
         <div class="overflow-y-auto">
             {#if events.length > 0}
                 {#each events as event}
                     <div class="flex items-center justify-between py-2">
-                        <div class="text-sm"><strong>@{event.date}:</strong> {event.topic}</div>
+                        <div><span class="font-semibold">@{event.date}:</span> <span class="text-md">{event.topic}</span></div>
                     </div>
                 {/each}
             {:else}
