@@ -15,7 +15,7 @@ export async function loadProfile() {
     
         const { data: streakData } = await supabase
             .from('user_streaks')
-            .select("streak")
+            .select("streak, updated_at")
             .single();
 
         if (!profileData) return
@@ -23,7 +23,7 @@ export async function loadProfile() {
         userProfile.set({
             displayname: profileData.displayname,
             settings: profileData.settings,
-            streak: streakData ? streakData.streak : 0,
+            streak: streakData ?? { streak: 0, updated_at: '' },
         });
     }
 }

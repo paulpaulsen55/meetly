@@ -4,7 +4,7 @@ import type { Session, User } from '@supabase/supabase-js'
 import { goto } from '$app/navigation'
 
 export type UserProfile = {
-    streak: number
+    streak: {streak: number, updated_at: string}
     displayname: string
     settings: any
 }
