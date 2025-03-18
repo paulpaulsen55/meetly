@@ -3,8 +3,14 @@ import { supabase } from '$lib/supabase'
 import type { Session, User } from '@supabase/supabase-js'
 import { goto } from '$app/navigation'
 
+export interface EventData {
+    date: string;
+    topic: string;
+}
+
 export type UserProfile = {
     streak: {streak: number, updated_at: string}
+    events: EventData[]
     displayname: string
     settings: any
 }

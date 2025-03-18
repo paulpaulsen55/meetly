@@ -3,14 +3,21 @@
     import StreakCounter from '$lib/components/StreakCounter.svelte';
     import WeekStreak from '$lib/components/WeekStreak.svelte';
     import UpcomingEvents from '$lib/components/UpcomingEvents.svelte';
-    import InputButtons from '$lib/components/InputButtons.svelte';
-
+    import InputWrapper from '$lib/components/InputWrapper.svelte';
 </script>
 
-<main class="min-h-screen bg-white p-4 max-w-md mx-auto">
-    <Header />
-    <StreakCounter />
-    <WeekStreak />
-    <UpcomingEvents />
-    <InputButtons />
+<main class="h-screen flex flex-col bg-white p-4 max-w-md mx-auto">
+    <div class="flex-none">
+        <Header />
+    </div>
+
+    <div class="flex-grow flex flex-col gap-3">
+        <StreakCounter />
+        <WeekStreak />
+        <UpcomingEvents />
+    </div>
+    
+    <div class="flex-none mt-auto pt-4">
+        <InputWrapper />
+    </div>
 </main>
