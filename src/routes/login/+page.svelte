@@ -4,7 +4,7 @@
     import { ChevronLeft } from "lucide-svelte";
     import type { User } from '@supabase/supabase-js'
     import { user } from "$lib/auth";
-
+    import { loadProfile } from "$lib/helper";
 
     let email = $state("");
     let password = $state("");
@@ -33,6 +33,7 @@
 
             if (error) throw error;
 
+            await loadProfile();
             goto("/app/home");
         } catch (error) {
             errorMessage = error as string;

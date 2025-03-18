@@ -1,5 +1,6 @@
 import { writable, get } from 'svelte/store';
 import { supabase } from './supabase';
+import { loadProfile } from './helper';
 
 interface WebhookResponse {
     message: string;
@@ -93,6 +94,8 @@ export async function sendWebhook(content: Blob | string): Promise<WebhookRespon
                 } else {
                     success = true;
                     console.log("Event saved to Supabase successfully");
+
+                    await loadProfile();
                 }
             } catch (dbError) {
                 console.error("Error connecting to Supabase:", dbError);
