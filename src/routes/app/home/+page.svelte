@@ -3,7 +3,7 @@
     import StreakCounter from '$lib/components/StreakCounter.svelte';
     import WeekStreak from '$lib/components/WeekStreak.svelte';
     import UpcomingEvents from '$lib/components/UpcomingEvents.svelte';
-    import InputWrapper from '$lib/components/InputButtons.svelte';
+    import InputWrapper from '$lib/components/InputWrapper.svelte';
 </script>
 
 <main class="h-screen flex flex-col bg-white p-4 max-w-md mx-auto">
