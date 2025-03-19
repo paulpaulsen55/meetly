@@ -33,17 +33,63 @@ export function parseDate(dateStr: string): Date | null {
   // Normalize input: trim and convert to lowercase
   const normalizedStr = dateStr.trim().toLowerCase();
   
-  // Handle German natural language date references
-  if (/^(heute|morgen|übermorgen)$/i.test(normalizedStr)) {
+  // Handle German and English natural language date references
+  if (/^(heute|today|morgen|tomorrow|übermorgen)$/i.test(normalizedStr)) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    if (normalizedStr === 'heute') {
+    if (normalizedStr === 'heute' || normalizedStr === 'today') {
       return today;
-    } else if (normalizedStr === 'morgen') {
+    } else if (normalizedStr === 'morgen' || normalizedStr === 'tomorrow') {
       return addDays(today, 1);
     } else if (normalizedStr === 'übermorgen') {
       return addDays(today, 2);
+    }
+  }
+  
+  // Handle phrase-based date references (in X days)
+  const germanInDaysMatch = normalizedStr.match(/^in\s+(\d+|zwei|drei|vier|fünf|sechs|sieben)\s+tag(en|e)?$/i);
+  if (germanInDaysMatch) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    let days = 0;
+    const dayText = germanInDaysMatch[1].toLowerCase();
+    
+    // Convert text numbers to numeric values
+    if (dayText === 'zwei') days = 2;
+    else if (dayText === 'drei') days = 3;
+    else if (dayText === 'vier') days = 4;
+    else if (dayText === 'fünf') days = 5;
+    else if (dayText === 'sechs') days = 6;
+    else if (dayText === 'sieben') days = 7;
+    else days = parseInt(dayText, 10);
+    
+    if (days > 0) {
+      return addDays(today, days);
+    }
+  }
+
+  // Handle English "in X days" format
+  const englishInDaysMatch = normalizedStr.match(/^in\s+(\d+|two|three|four|five|six|seven)\s+days?$/i);
+  if (englishInDaysMatch) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    let days = 0;
+    const dayText = englishInDaysMatch[1].toLowerCase();
+    
+    // Convert text numbers to numeric values
+    if (dayText === 'two') days = 2;
+    else if (dayText === 'three') days = 3;
+    else if (dayText === 'four') days = 4;
+    else if (dayText === 'five') days = 5;
+    else if (dayText === 'six') days = 6;
+    else if (dayText === 'seven') days = 7;
+    else days = parseInt(dayText, 10);
+    
+    if (days > 0) {
+      return addDays(today, days);
     }
   }
   
@@ -64,6 +110,14 @@ export function parseDate(dateStr: string): Date | null {
     'fr': nextFriday,
     'sa': nextSaturday,
     'so': nextSunday,
+    // English weekday names
+    'monday': nextMonday,
+    'tuesday': nextTuesday,
+    'wednesday': nextWednesday,
+    'thursday': nextThursday,
+    'friday': nextFriday,
+    'saturday': nextSaturday,
+    'sunday': nextSunday,
   };
   
   for (const [weekday, nextFn] of Object.entries(weekdayMap)) {
