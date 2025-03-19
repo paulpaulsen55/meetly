@@ -2,30 +2,57 @@
     import { onDestroy } from 'svelte';
     import { userProfile } from '$lib/auth';
     import type { EventData } from '$lib/auth';
-    import { Clock, Info } from 'lucide-svelte';
+    import { Clock, Info, SquareArrowOutUpRight, Plus } from 'lucide-svelte';
+    import Drawer from './Drawer.svelte';
+    import DrawerEventInput from './DrawerEventInput.svelte';
 
-    let events: EventData[] = [];
+    let events = $state<EventData[]>([]);
+    let isEventDrawerOpen = $state(false);
+    
     const unsubscribe = userProfile.subscribe((value) => {
         events = value?.events ?? [];
     });
     onDestroy(unsubscribe);
+    
+    function openEventDrawer() {
+        isEventDrawerOpen = true;
+    }
+    
+    function closeEventDrawer() {
+        isEventDrawerOpen = false;
+    }
 </script>
 
 <div class="flex gap-2 mb-4">
     <div class="w-4/5 bg-gray-50 rounded-3xl p-4 flex flex-col">
-        <h2 class="text-2xl font-semibold mb-2 text-center text-gray-400">Upcoming</h2>
-        <div class="border-t border-gray-200 mb-3"></div>
+        <h2 class="text-2xl font-bold mb-2 text-center">Upcoming</h2>
+        <div class="border-t border-gray-300 mb-3"></div>
         
-        <div class="overflow-y-auto">
+        <div class="flex-1 overflow-y-auto min-h-0 max-h-64 pr-4" style="scrollbar-gutter: stable;">
             {#if events.length > 0}
                 {#each events as event}
-                    <div class="flex items-center justify-between py-2">
-                        <div><span class="font-semibold">@{event.date}:</span> <span class="text-md">{event.topic}</span></div>
+                    <div class="flex items-center mb-2">
+                        <div class="flex py-1 bg-gray-100 rounded-3xl px-2 w-full">
+                            <div>
+                                <span class="text-gray-400">@{event.date}:</span>
+                                <span class="text-md">{event.title}</span>
+                            </div>
+                        </div>
+                        <SquareArrowOutUpRight size={18} class="text-black hover:text-blue-500 cursor-pointer flex-shrink-0 ml-4" />
                     </div>
                 {/each}
-            {:else}
-                <p class="text-sm text-gray-500">No upcoming events</p>
             {/if}
+            <button 
+                type="button" 
+                class="flex py-1 rounded-3xl px-2 w-full cursor-pointer hover:bg-gray-100" 
+                onclick={openEventDrawer} 
+                aria-label="Add Event"
+            >
+                <div class="flex items-center">
+                    <Plus size={18} class="text-black mr-2"/> 
+                    <span class="text-md">add Event</span>
+                </div>
+            </button>
         </div>
     </div>
 
@@ -37,4 +64,20 @@
             <Clock size={45} />
         </div>
     </div>
+    
+    <!-- Listen for the drawer's close event -->
+    <Drawer 
+        isOpen={isEventDrawerOpen}
+        on:close={closeEventDrawer}
+    >
+        {#snippet button()}
+            <div></div>
+        {/snippet}
+        
+        {#snippet title()}
+            Add Event
+        {/snippet}
+        
+        <DrawerEventInput />
+    </Drawer>
 </div>

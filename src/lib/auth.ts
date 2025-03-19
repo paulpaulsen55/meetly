@@ -5,7 +5,7 @@ import { goto } from '$app/navigation'
 
 export interface EventData {
     date: string;
-    topic: string;
+    title: string;
 }
 
 export type UserProfile = {

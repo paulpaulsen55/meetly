@@ -11,13 +11,13 @@
         <Header />
     </div>
 
-    <div class="flex-grow flex flex-col gap-3">
+    <div class="flex-grow flex flex-col gap-3 min-h-0">
         <StreakCounter />
         <WeekStreak />
         <UpcomingEvents />
     </div>
     
-    <div class="flex-none mt-auto pt-4">
+    <div class="flex-none mt-auto">
         <InputWrapper />
     </div>
 </main>
