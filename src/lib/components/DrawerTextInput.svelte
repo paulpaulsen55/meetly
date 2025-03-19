@@ -1,5 +1,6 @@
 <script lang="ts">
     import { sendWebhook } from "$lib/webhook";
+    import { responseMessage, isError, isSuccess } from "$lib/webhook";
 
     let webhookText = $state("");
     let loading = $state(false);
@@ -37,7 +38,7 @@
     </form>
 
     <!-- Response message with ARIA live region for accessibility -->
-    <!-- {#if $responseMessage}
+    {#if $responseMessage}
         <div 
             class={`mt-4 p-3 rounded border ${
                 $isSuccess 
@@ -51,5 +52,5 @@
         >
             {$responseMessage}
         </div>
-    {/if} -->
+    {/if}
 </div>

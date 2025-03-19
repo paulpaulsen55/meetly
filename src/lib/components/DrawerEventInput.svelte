@@ -56,8 +56,7 @@
             <label for="event-date" class="block text-sm font-medium text-gray-700 mb-1 text-left">Date</label>
             <input
                 id="event-date"
-                type="text"
-                placeholder="DD.MM.YYYY"
+                type="date"
                 bind:value={eventDate}
                 aria-label="Event date"
                 class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"

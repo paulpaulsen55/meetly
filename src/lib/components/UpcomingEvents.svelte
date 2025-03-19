@@ -1,10 +1,11 @@
 <script lang="ts">
     import { onDestroy } from 'svelte';
+    import { Clock, Info, SquareArrowOutUpRight, Plus } from 'lucide-svelte';
     import { userProfile } from '$lib/auth';
     import type { EventData } from '$lib/auth';
-    import { Clock, Info, SquareArrowOutUpRight, Plus } from 'lucide-svelte';
     import Drawer from './Drawer.svelte';
     import DrawerEventInput from './DrawerEventInput.svelte';
+    import { formatDate } from '$lib/date';
 
     let events = $state<EventData[]>([]);
     let isEventDrawerOpen = $state(false);
@@ -34,7 +35,8 @@
                     <div class="flex items-center mb-2">
                         <div class="flex py-1 bg-gray-100 rounded-3xl px-2 w-full">
                             <div>
-                                <span class="text-gray-400">@{event.date}:</span>
+                                <!-- Use formatDate to display friendly date format -->
+                                <span class="text-gray-400">@{formatDate(event.date)}:</span>
                                 <span class="text-md">{event.title}</span>
                             </div>
                         </div>
