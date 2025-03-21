@@ -46,12 +46,12 @@
     }
 </script>
 
-<div class="flex gap-2 mb-2">
+<div class="flex gap-2">
     <div class="w-full bg-gray-50 border border-gray-200 rounded-3xl p-4">
-        <h2 class="text-2xl text-gray-500 mb-3 border-b border-gray-200">Upcoming</h2>
+        <h2 class="text-2xl text-gray-500 border-b border-gray-200 pb-1">Upcoming</h2>
 
-        <div class="flex-1 overflow-y-auto min-h-0 max-h-64 pr-4" style="scrollbar-gutter: stable;">
-            <div class="mb-3 p-1">
+        <div class="flex-1 overflow-y-auto min-h-0 max-h-68 pr-4" style="scrollbar-gutter: stable;">
+            <div class="mt-3 mb-3 p-1">
                 <div class="flex gap-2">
                     <input
                         type="text"
