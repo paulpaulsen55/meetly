@@ -1,4 +1,4 @@
-import { get, writable } from 'svelte/store'
+import { writable } from 'svelte/store'
 import { supabase } from '$lib/supabase'
 import type { Session, User } from '@supabase/supabase-js'
 import { goto } from '$app/navigation'

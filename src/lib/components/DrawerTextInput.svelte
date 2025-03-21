@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { sendWebhook } from "$lib/webhook";
-    import { responseMessage, isError, isSuccess } from "$lib/webhook";
+    import { sendWebhook, responseMessage, isError, isSuccess } from "$lib/webhook";
 
     let webhookText = $state("");
     let loading = $state(false);

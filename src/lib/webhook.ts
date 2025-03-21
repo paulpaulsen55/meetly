@@ -1,7 +1,5 @@
 import { writable, get } from 'svelte/store';
-import { supabase } from './supabase';
-import { loadProfile } from './helper';
-import { parseDate, formatISODate } from './date';
+import { addEvent } from './helper';
 
 interface WebhookResponse {
     message: string;
@@ -93,37 +91,16 @@ export async function sendWebhook(content: Blob | string): Promise<WebhookRespon
                     }
                     
                     console.log("Parsed webhook response:", parsedData);
-                    
-                    // Validate the date
-                    if (!parsedData.date) {
-                        throw new Error("No date found in event");
-                    }
-                    
-                    const parsedDate = parseDate(parsedData.date);
-                    if (!parsedDate) {
-                        throw new Error(`Invalid date format: ${parsedData.date}`);
-                    }
-                    
-                    // Convert to ISO format (YYYY-MM-DD)
-                    parsedData.date = formatISODate(parsedDate);
-                    
-                    // Save validated event to database
-                    const { error: dbError } = await supabase
-                        .from('user_events')
-                        .insert({
-                            event: parsedData
-                        });
-                    
-                    if (dbError) {
-                        throw dbError;
+
+                    const result = await addEvent(parsedData);
+
+                    if (!result.success) {
+                        throw new Error(result.error);
                     }
                     
                     success = true;
                     isSuccess.set(true);
-                    responseMessage.set("Event added successfully!");
-                    
-                    await loadProfile();
-                    
+                    responseMessage.set("Event added successfully!");                    
                 } catch (parseError) {
                     console.error("Error with webhook data:", parseError);
                     error = parseError instanceof Error ? parseError.message : "Failed to process event data";

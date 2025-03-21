@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { sendWebhook, startRecording, stopRecording, responseMessage, isError, isSuccess } from "$lib/webhook";
+    import { sendWebhook, responseMessage, isError, isSuccess } from "$lib/webhook";
     import { Mic } from "lucide-svelte";
     
     let mediaRecorder: MediaRecorder | null = $state(null);

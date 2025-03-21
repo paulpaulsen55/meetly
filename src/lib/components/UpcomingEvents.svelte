@@ -1,85 +1,89 @@
 <script lang="ts">
     import { onDestroy } from 'svelte';
-    import { Clock, Info, SquareArrowOutUpRight, Plus } from 'lucide-svelte';
+    import { SquareArrowOutUpRight, Plus } from 'lucide-svelte';
     import { userProfile } from '$lib/auth';
     import type { EventData } from '$lib/auth';
-    import Drawer from './Drawer.svelte';
-    import DrawerEventInput from './DrawerEventInput.svelte';
-    import { formatDate } from '$lib/date';
+    import { formatDate, parseDate } from '$lib/date';
+    import { sendWebhook } from "$lib/webhook";
 
     let events = $state<EventData[]>([]);
-    let isEventDrawerOpen = $state(false);
+    let newEventText = $state("");
+    let loading = $state(false);
     
     const unsubscribe = userProfile.subscribe((value) => {
-        events = value?.events ?? [];
+        if (value?.events) {
+            // Get current date (without time)
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            // Filter out past events and sort by date
+            events = value.events
+                .filter(event => {
+                    const eventDate = parseDate(event.date);
+                    return eventDate && eventDate >= today;
+                })
+                .sort((a, b) => {
+                    const dateA = parseDate(a.date) || new Date();
+                    const dateB = parseDate(b.date) || new Date();
+                    return dateA.getTime() - dateB.getTime();
+                });
+        } else {
+            events = [];
+        }
     });
     onDestroy(unsubscribe);
-    
-    function openEventDrawer() {
-        isEventDrawerOpen = true;
-    }
-    
-    function closeEventDrawer() {
-        isEventDrawerOpen = false;
+
+    async function handleAddEvent() {
+        if (!newEventText.trim()) return;
+        
+        loading = true;
+        try {
+            await sendWebhook(newEventText);
+            newEventText = "";
+        } finally {
+            loading = false;
+        }
     }
 </script>
 
-<div class="flex gap-2 mb-4">
-    <div class="w-4/5 bg-gray-50 rounded-3xl p-4 flex flex-col">
-        <h2 class="text-2xl font-bold mb-2 text-center">Upcoming</h2>
-        <div class="border-t border-gray-300 mb-3"></div>
-        
+<div class="flex gap-2 mb-2">
+    <div class="w-full bg-gray-50 border border-gray-200 rounded-3xl p-4">
+        <h2 class="text-2xl text-gray-500 mb-3 border-b border-gray-200">Upcoming</h2>
+
         <div class="flex-1 overflow-y-auto min-h-0 max-h-64 pr-4" style="scrollbar-gutter: stable;">
+            <div class="mb-3 p-1">
+                <div class="flex gap-2">
+                    <input
+                        type="text"
+                        placeholder="Add new event ..."
+                        bind:value={newEventText}
+                        class="flex-grow bg-white border border-gray-300 rounded-full py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        disabled={loading}
+                    />
+                    <button 
+                        class={`rounded-full w-12 h-12 flex items-center justify-center ${loading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"} text-white`}
+                        onclick={handleAddEvent}
+                        disabled={loading}
+                    >
+                        <Plus class="w-5 h-5" />
+                    </button>
+                </div>
+            </div>
+            
             {#if events.length > 0}
                 {#each events as event}
-                    <div class="flex items-center mb-2">
-                        <div class="flex py-1 bg-gray-100 rounded-3xl px-2 w-full">
-                            <div>
-                                <!-- Use formatDate to display friendly date format -->
-                                <span class="text-gray-400">@{formatDate(event.date)}:</span>
-                                <span class="text-md">{event.title}</span>
+                    <div class="space-y-3 mb-3">
+                        <div class="flex items-center justify-between">
+                            <div class="bg-gray-200 rounded-full py-2 px-4 flex-grow mr-2">
+                            <p>
+                                <span class="text-gray-500">@{formatDate(event.date)}:</span> {event.title}
+                            </p>
                             </div>
+                            <SquareArrowOutUpRight size="20" class="hover:text-blue-500 cursor-pointer" />
                         </div>
-                        <SquareArrowOutUpRight size={18} class="text-black hover:text-blue-500 cursor-pointer flex-shrink-0 ml-4" />
                     </div>
                 {/each}
             {/if}
-            <button 
-                type="button" 
-                class="flex py-1 rounded-3xl px-2 w-full cursor-pointer hover:bg-gray-100" 
-                onclick={openEventDrawer} 
-                aria-label="Add Event"
-            >
-                <div class="flex items-center">
-                    <Plus size={18} class="text-black mr-2"/> 
-                    <span class="text-md">add Event</span>
-                </div>
-            </button>
         </div>
     </div>
-
-    <div class="w-1/5 flex flex-col gap-4">
-        <div class="h-20 bg-gray-50 rounded-3xl flex items-center justify-center">
-            <Info size={45} />
-        </div>
-        <div class="h-20 bg-gray-50 rounded-3xl flex items-center justify-center">
-            <Clock size={45} />
-        </div>
-    </div>
-    
-    <!-- Listen for the drawer's close event -->
-    <Drawer 
-        isOpen={isEventDrawerOpen}
-        on:close={closeEventDrawer}
-    >
-        {#snippet button()}
-            <div></div>
-        {/snippet}
-        
-        {#snippet title()}
-            Add Event
-        {/snippet}
-        
-        <DrawerEventInput />
-    </Drawer>
 </div>
