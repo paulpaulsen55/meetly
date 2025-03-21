@@ -7,21 +7,29 @@ import { get } from 'svelte/store'
  * Loads the user profile and user data
  */
 export async function loadProfile() {
+    const { data: user } = await supabase.auth.getUser();
+    const userId = user?.user?.id;
+    
+    if (!userId) return;
+
     const { data: profileData } = await supabase
         .from('user_profiles')
         .select("displayname, settings")
-        .single();
+        .eq('user_id', userId)
+        .maybeSingle();
 
     const { data: streakData } = await supabase
         .from('user_streaks')
         .select("streak, updated_at")
-        .single();
+        .eq('user_id', userId)
+        .maybeSingle();
   
     const { data: eventData } = await supabase
         .from('user_events')
         .select("event, id")
+        .eq('user_id', userId);
 
-    if (!profileData) return
+    if (!profileData) return;
 
     userProfile.set({
         displayname: profileData.displayname,
@@ -75,5 +83,55 @@ export async function addEvent(eventData: { date: string, title: string }) {
             success: false, 
             error: error instanceof Error ? error.message : "Failed to add event" 
         };
+    }
+}
+
+/**
+ * Fetches all users from the database
+ * @returns Object with success status, error message if any, and array of user profiles
+ */
+export async function getAllUsers() {
+    try {
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .select('displayname');
+      
+      if (error) {
+        console.error("Error fetching displaynames:", error.message);
+        return { 
+          success: false, 
+          error: error.message, 
+          users: [] 
+        };
+      }
+      
+      // Filter out the current user
+      const currentProfile = get(userProfile);
+      const currentUsername = currentProfile?.displayname;
+      
+      if (!currentUsername) {
+        return { 
+          success: true, 
+          users: data || [] 
+        };
+      }
+      
+      const otherUsers = data?.filter(user => 
+        user.displayname !== currentUsername
+      ) || [];
+      
+      console.log(`Filtered users: ${otherUsers.length} of ${data?.length || 0} total`);
+      
+      return { 
+        success: true, 
+        users: otherUsers 
+      };
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : "Failed to fetch users",
+        users: []
+      };
     }
 }

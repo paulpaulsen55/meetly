@@ -50,6 +50,7 @@
     <div class="w-full bg-gray-50 border border-gray-200 rounded-3xl p-4">
         <h2 class="text-2xl text-gray-500 border-b border-gray-200 pb-1">Upcoming</h2>
 
+        <!-- Add new event -->
         <div class="flex-1 overflow-y-auto min-h-0 max-h-68 pr-4" style="scrollbar-gutter: stable;">
             <div class="mt-3 mb-3 p-1">
                 <div class="flex gap-2">
@@ -61,15 +62,16 @@
                         disabled={loading}
                     />
                     <button 
-                        class={`rounded-full w-12 h-12 flex items-center justify-center ${loading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"} text-white`}
+                        class={`rounded-full w-12 h-12 flex items-center justify-center cursor-pointer ${loading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"} text-white`}
                         onclick={handleAddEvent}
                         disabled={loading}
                     >
-                        <Plus class="w-5 h-5" />
+                        <Plus size="25" />
                     </button>
                 </div>
             </div>
             
+            <!-- Events -->
             {#if events.length > 0}
                 {#each events as event}
                     <div class="space-y-3 mb-3">
