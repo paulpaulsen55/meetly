@@ -1,7 +1,6 @@
 <script lang="ts">
     import { userProfile } from '$lib/stores';
     import { Settings } from 'lucide-svelte';
-    import { get } from 'svelte/store';
 </script>
 
 <header class="flex justify-between items-center mb-4">
