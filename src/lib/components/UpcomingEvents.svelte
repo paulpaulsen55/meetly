@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onDestroy } from 'svelte';
-    import { userProfile } from '$lib/auth';
-    import type { EventData } from '$lib/auth';
+    import { userProfile } from '$lib/stores';
+    import type { EventData } from '$lib/stores';
     import { Clock, Info } from 'lucide-svelte';
 
     let events: EventData[] = [];

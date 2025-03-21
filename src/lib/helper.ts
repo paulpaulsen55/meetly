@@ -1,4 +1,4 @@
-import { userProfile } from './auth'
+import { actions, userProfile } from './stores'
 import { supabase } from './supabase'
 
 /**
@@ -17,14 +17,37 @@ export async function loadProfile() {
   
     const { data: eventData } = await supabase
         .from('user_events')
-        .select("event, id")
+        .select("date, topic")
+    
+    const { data: coinsData } = await supabase
+        .from('user_coins')
+        .select("coins")
+        .single()
 
     if (!profileData) return
 
     userProfile.set({
         displayname: profileData.displayname,
-        events: eventData ? eventData.map(e => e.event) : [],
+        events: eventData ?? [],
         settings: profileData.settings,
-        streak: streakData ?? { streak: 0, updated_at: '' },
+        coins: coinsData?.coins ?? 0
     });
+}
+
+export async function loadActions() {
+    const { data: actionsData } = await supabase
+        .from('actions')
+        .select("*")
+        .order('coins', { ascending: false });
+
+    actions.set(actionsData || []);
+}
+
+export async function insertActionById(actionId: number) {
+    const { error } = await supabase
+        .from('user_actions')
+        .insert({ "action_id" : actionId })
+    if (error) {
+        console.error("Error inserting event:", error)
+    }
 }

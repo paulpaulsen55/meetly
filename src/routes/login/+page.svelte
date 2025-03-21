@@ -3,7 +3,7 @@
     import { goto } from "$app/navigation";
     import { ChevronLeft } from "lucide-svelte";
     import type { User } from '@supabase/supabase-js'
-    import { user } from "$lib/auth";
+    import { user } from "$lib/stores";
     import { loadProfile } from "$lib/helper";
 
     let email = $state("");
@@ -54,7 +54,9 @@
             <span>Login to your account<span> </span></span>
         </h1>
         {#if errorMessage}
-            <div class="error">{errorMessage}</div>
+            <div class="bg-red-300 text-red-800 p-4 rounded">
+                {errorMessage}
+            </div>
         {/if}
         <form onsubmit={handleLogin} class="flex flex-col gap-4">
             <div class="form-group">

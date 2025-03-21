@@ -1,23 +1,6 @@
-import { get, writable } from 'svelte/store'
 import { supabase } from '$lib/supabase'
-import type { Session, User } from '@supabase/supabase-js'
 import { goto } from '$app/navigation'
-
-export interface EventData {
-    date: string;
-    topic: string;
-}
-
-export type UserProfile = {
-    streak: {streak: number, updated_at: string}
-    events: EventData[]
-    displayname: string
-    settings: any
-}
-
-export const user = writable<User | null>(null)
-export const userProfile = writable<UserProfile | null>(null)
-export const session = writable<Session | null>(null)
+import { session, user, userProfile } from './stores'
 
 // Initial session
 supabase.auth.getSession().then(({ data }) => {
@@ -29,6 +12,7 @@ supabase.auth.getSession().then(({ data }) => {
 supabase.auth.onAuthStateChange(async (event, newSession) => {
     session.set(newSession)
     user.set(newSession?.user || null)
+    
 
     if (event == "SIGNED_OUT") {
         user.set(null)
