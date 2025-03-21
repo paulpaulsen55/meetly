@@ -2,9 +2,13 @@
     import { X } from "lucide-svelte";
     import { fly } from "svelte/transition";
     import { cubicOut } from "svelte/easing";
-    import { onMount } from "svelte";
+    import { onMount, createEventDispatcher } from "svelte";
+    
+    // Mark isOpen as bindable (using Svelte runes here)
+    let { children, button, title, isOpen = $bindable(false) } = $props();
 
-    let { children, button, title} = $props();
+    // Create a dispatcher so we can notify when the drawer is closed
+    const dispatch = createEventDispatcher();
 
     // Drag gesture variables
     let startY = $state(0);
@@ -12,8 +16,6 @@
     let dragging = $state(false);
     let drawerElement: HTMLElement | null = $state(null);
     let drawerHeight = $state(0);
-    let isOpen = $state(false);
-
     let drawerTransform = $state(0);
 
     // Add event listeners for drag on component mount
@@ -46,7 +48,8 @@
     function closeDrawer() {
         isOpen = false;
         drawerTransform = 0;
-
+        // Dispatch the close event so the parent resets its state
+        dispatch('close');
         setTimeout(() => {
             document.body.classList.remove("drawer-open");
         }, 300);
@@ -126,7 +129,7 @@
             role="button"
             tabindex="0"
             bind:this={drawerElement}
-            class="fixed inset-x-0 bottom-0 h-1/2 bg-white shadow-lg rounded-t-3xl z-50 touch-pan-y"
+            class="fixed inset-x-0 bottom-0 h-1/3 bg-white shadow-lg rounded-t-3xl z-50 touch-pan-y"
             in:fly={{ y: 500, duration: 300, easing: cubicOut }}
             out:fly={{ y: 500, duration: 300, easing: cubicOut }}
             onmousedown={handleDragStart}
@@ -140,8 +143,8 @@
             ></div>
 
             <!-- Header with close button -->
-            <div class="flex justify-between items-center p-4 border-b">
-                <h3 class="text-lg font-semibold">
+            <div class="flex justify-between items-center px-4 pb-2 border-b border-gray-300">
+                <h3 class="text-lg font-semibold m-0">
                     {@render title()}
                 </h3>
                 <button
@@ -156,7 +159,7 @@
             <!-- Drawer Content -->
             <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
             <div
-                class="p-5 h-[calc(100%-60px)] overflow-y-auto"
+                class="p-4 h-[calc(100%-60px)] overflow-y-auto"
                 role="region"
                 aria-label="Drawer content"
                 onmousedown={(e) => e.stopPropagation()}
