@@ -298,7 +298,7 @@
         "text": "={{ $json.message }}",
         "hasOutputParser": true,
         "options": {
-          "systemMessage": "You are a helpful assistant. create json format of the event with date and topic as their respective fields"
+          "systemMessage": "=You are a helpful assistant. Extract event information from user input and return it in JSON format.\n\nIMPORTANT RULES:\n1. ALWAYS return a valid JSON with \"date\" and \"title\" fields\n2. For the \"date\" field:\n   - If the input contains natural language date references like \"morgen\", \"heute\", \"tomorrow\", \"today\", etc., provide them in the \"date\" field of the JSON response\n3. For the \"title\" field:\n   - Extract the main event description after removing any date references\n   - If only date is provided without a title, use \"Untitled event\" as the title\n\nExamples:\n- Input: \"morgen kacken\"\n  Output: {\"date\": \"morgen\", \"title\": \"kacken\"}\n- Input: \"heute meeting\"\n  Output: {\"date\": \"heute\", \"title\": \"meeting\"}\n- Input: \"montag zum arzt\"\n  Output: {\"date\": \"montag\", \"title\": \"zum arzt\"}\n\nDo not include explanations in your response, ONLY return the JSON object."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -348,7 +348,7 @@
     },
     {
       "parameters": {
-        "jsonSchemaExample": "{\n\t\"date\": \"20.02.2025\",\n\t\"title\": \"Uni\"\n}"
+        "jsonSchemaExample": "{\n\t\"date\": \"\",\n\t\"title\": \"\"\n}"
       },
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.2,
@@ -573,7 +573,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "093df49c-04a4-44a5-bd17-a131f589888e",
+  "versionId": "5683abb4-5c08-424b-8b0f-48150d7e8e72",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "e5c5ecb57167cbf8b7392edbac5a75daf8247bfb13362c335453bb1e5c29a4cf"

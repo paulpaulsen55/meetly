@@ -3,6 +3,7 @@
     import { SquareArrowOutUpRight, Plus } from 'lucide-svelte';
     import { userProfile } from '$lib/auth';
     import type { EventData } from '$lib/auth';
+    import { loadProfile } from '$lib/helper';
     import { formatDate, parseDate } from '$lib/date';
     import { sendWebhook } from "$lib/webhook";
 
@@ -38,8 +39,15 @@
         
         loading = true;
         try {
-            await sendWebhook(newEventText);
+            const result = await sendWebhook(newEventText);
+            
+            if (result && result.success) {
+                await loadProfile();
+            }
+            
             newEventText = "";
+        } catch (error) {
+            console.error("Error adding event:", error);
         } finally {
             loading = false;
         }
