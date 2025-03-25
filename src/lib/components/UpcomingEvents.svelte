@@ -54,40 +54,40 @@
     }
 </script>
 
-<div class="flex gap-2">
-    <div class="w-full bg-gray-50 border border-gray-200 rounded-3xl p-4">
-        <h2 class="text-2xl text-gray-500 border-b border-gray-200 pb-1">Upcoming</h2>
+<div class="h-full flex">
+    <div class="w-full bg-gray-50 border border-gray-200 rounded-3xl p-4 flex flex-col">
+        <h2 class="text-2xl text-gray-500 border-b border-gray-200 pb-1 flex-none">Upcoming</h2>
 
         <!-- Add new event -->
-        <div class="flex-1 overflow-y-auto min-h-0 max-h-68 pr-4" style="scrollbar-gutter: stable;">
-            <div class="mt-3 mb-3 p-1">
-                <div class="flex gap-2">
-                    <input
-                        type="text"
-                        placeholder="Add new event ..."
-                        bind:value={newEventText}
-                        class="flex-grow bg-white border border-gray-300 rounded-full py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        disabled={loading}
-                    />
-                    <button 
-                        class={`rounded-full w-12 h-12 flex items-center justify-center cursor-pointer ${loading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"} text-white`}
-                        onclick={handleAddEvent}
-                        disabled={loading}
-                    >
-                        <Plus size="25" />
-                    </button>
-                </div>
+        <div class="mt-3 pb-3 flex-none">
+            <div class="flex gap-2">
+                <input
+                type="text"
+                placeholder="Add new event ..."
+                bind:value={newEventText}
+                class="flex-grow bg-white border border-gray-300 rounded-full py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled={loading}
+                />
+                <button 
+                    class={`rounded-full w-12 h-12 flex items-center justify-center cursor-pointer ${loading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"} text-white`}
+                    onclick={handleAddEvent}
+                    disabled={loading}
+                >
+                    <Plus size="25" />
+                </button>
             </div>
-            
-            <!-- Events -->
+        </div>
+        
+        <!-- Events list (scrollable) -->
+        <div class="flex-grow overflow-y-auto pr-2" style="scrollbar-gutter: stable; min-height: 0;">
             {#if events.length > 0}
                 {#each events as event}
-                    <div class="space-y-3 mb-3">
+                    <div class="mb-3">
                         <div class="flex items-center justify-between">
                             <div class="bg-gray-200 rounded-full py-2 px-4 flex-grow mr-2">
-                            <p>
-                                <span class="text-gray-500">@{formatDate(event.date)}:</span> {event.title}
-                            </p>
+                                <p>
+                                    <span class="text-gray-500">@{formatDate(event.date)}:</span> {event.title}
+                                </p>
                             </div>
                             <SquareArrowOutUpRight size="20" class="hover:text-blue-500 cursor-pointer" />
                         </div>
