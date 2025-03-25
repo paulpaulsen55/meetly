@@ -31,10 +31,14 @@
                 password: password,
             });
 
-            if (error) throw error;
-
-            await loadProfile();
-            goto("/app/home");
+            if (error) {
+                console.log(error);
+                
+                throw error;
+            } else {
+                await loadProfile();
+                goto("/app/home");
+            }
         } catch (error) {
             errorMessage = error as string;
         } finally {

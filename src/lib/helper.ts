@@ -1,4 +1,5 @@
-import { actions, userProfile } from './stores'
+import { get } from 'svelte/store';
+import { actions, user, userProfile } from './stores'
 import { supabase } from './supabase'
 
 /**
@@ -8,16 +9,12 @@ export async function loadProfile() {
     const { data: profileData } = await supabase
         .from('user_profiles')
         .select("displayname, settings")
-        .single();
-
-    const { data: streakData } = await supabase
-        .from('user_streaks')
-        .select("streak, updated_at")
+        .eq('user_id', get(user)?.id)
         .single();
   
     const { data: eventData } = await supabase
         .from('user_events')
-        .select("date, topic")
+        .select("event")
     
     const { data: coinsData } = await supabase
         .from('user_coins')
@@ -28,7 +25,7 @@ export async function loadProfile() {
 
     userProfile.set({
         displayname: profileData.displayname,
-        events: eventData ?? [],
+        events: eventData?.map(event => JSON.parse(event.event)) ?? [],
         settings: profileData.settings,
         coins: coinsData?.coins ?? 0
     });
