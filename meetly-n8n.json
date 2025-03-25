@@ -8,13 +8,13 @@
         "responseMode": "responseNode",
         "options": {}
       },
-      "id": "9071ac41-c4f4-403d-8f83-ca3d16893d73",
+      "id": "20c76add-86a8-4757-ba0b-ed1ece090c30",
       "name": "Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1.1,
       "position": [
-        -320,
-        360
+        -400,
+        540
       ],
       "webhookId": "981ad22c-97a6-4f32-a0d9-c8e70cebcdb4"
     },
@@ -23,24 +23,24 @@
         "respondWith": "allIncomingItems",
         "options": {}
       },
-      "id": "91ce7fb0-112f-44f7-80f7-4ffefc3104c5",
+      "id": "0d5ff21a-e4d7-43c2-9e03-c1ab23454ef4",
       "name": "Respond to Webhook",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        1080,
-        320
+        1000,
+        500
       ]
     },
     {
       "parameters": {},
-      "id": "8aa62edb-c573-4efd-b29d-65d07087ec18",
+      "id": "d37666cf-f9df-4946-b65b-4942c4d0f96d",
       "name": "Data",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        560,
-        -20
+        480,
+        160
       ]
     },
     {
@@ -65,13 +65,13 @@
           "includeBinary": true
         }
       },
-      "id": "b5d89a60-2855-4801-95bf-b4b435fac51c",
+      "id": "d5c99d29-0661-4dc7-aea7-0f5c01c80763",
       "name": "Set with SessionId",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.3,
       "position": [
-        340,
-        -120
+        260,
+        60
       ]
     },
     {
@@ -94,13 +94,13 @@
         },
         "options": {}
       },
-      "id": "f1d6aa53-705c-4d15-824f-b51d03e0261e",
+      "id": "3dd71e8b-b064-41e3-a6ae-6677902ca9d5",
       "name": "Set with GeneratedID",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.3,
       "position": [
-        340,
-        60
+        260,
+        240
       ]
     },
     {
@@ -128,36 +128,14 @@
         },
         "options": {}
       },
-      "id": "e0276bb4-4f0c-40c5-887d-78b0a1f21363",
+      "id": "407a99fe-8456-473a-aa03-0f7c0c84b424",
       "name": "If has SessionId",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        120,
-        -40
+        40,
+        140
       ]
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        400,
-        340
-      ],
-      "id": "3ff28981-c033-4999-9872-5917f3010b71",
-      "name": "message"
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        400,
-        340
-      ],
-      "id": "3ff28981-c033-4999-9872-5917f3010b71",
-      "name": "message"
     },
     {
       "parameters": {
@@ -176,10 +154,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        260,
-        500
+        180,
+        680
       ],
-      "id": "12e7bb41-a485-435d-9308-f05a18e9a309",
+      "id": "6ed25118-6cb6-4aa6-a33e-39e0bce9c4ce",
       "name": "Set text message"
     },
     {
@@ -243,10 +221,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -100,
-        360
+        -180,
+        540
       ],
-      "id": "60b519d5-1b0f-41c1-bcae-6d420359b8bc",
+      "id": "99a66b4a-1366-4c74-8d92-399d0873b7d9",
       "name": "Switch text/audio",
       "alwaysOutputData": false
     },
@@ -260,10 +238,10 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.8,
       "position": [
-        100,
-        500
+        20,
+        680
       ],
-      "id": "48ed7799-eb4d-41c2-9f44-194360f84fa0",
+      "id": "bb630cc4-af52-401e-bb94-933f3d05a283",
       "name": "OpenAI whisper",
       "alwaysOutputData": false,
       "executeOnce": false,
@@ -271,7 +249,7 @@
       "notesInFlow": false,
       "credentials": {
         "openAiApi": {
-          "id": "ulC0gVqcWHawrtlE",
+          "id": "P7uF65mOoext6ato",
           "name": "OpenAi account"
         }
       }
@@ -293,10 +271,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        100,
-        340
+        20,
+        520
       ],
-      "id": "69bc0df5-bb37-4993-be7e-9c8e696ec1dd",
+      "id": "baf83335-36a4-440a-9717-4b65a5a044ff",
       "name": "Set text message1"
     },
     {
@@ -308,10 +286,10 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        80,
-        -180
+        0,
+        0
       ],
-      "id": "5c589430-233f-48bf-8eac-f9c9ac289ddd",
+      "id": "12ca3bed-7085-4e09-86f7-cae0916212c2",
       "name": "Sticky Note"
     },
     {
@@ -320,16 +298,16 @@
         "text": "={{ $json.message }}",
         "hasOutputParser": true,
         "options": {
-          "systemMessage": "You are a helpful assistant. create json format of the event with date and topic as their respective fields"
+          "systemMessage": "=You are a helpful assistant. Extract event information from user input and return it in JSON format.\n\nIMPORTANT RULES:\n1. ALWAYS return a valid JSON with \"date\" and \"title\" fields\n2. For the \"date\" field:\n   - If the input contains natural language date references like \"morgen\", \"heute\", \"tomorrow\", \"today\", etc., provide them in the \"date\" field of the JSON response\n3. For the \"title\" field:\n   - Extract the main event description after removing any date references\n   - If only date is provided without a title, use \"Untitled event\" as the title\n\nExamples:\n- Input: \"morgen kacken\"\n  Output: {\"date\": \"morgen\", \"title\": \"kacken\"}\n- Input: \"heute meeting\"\n  Output: {\"date\": \"heute\", \"title\": \"meeting\"}\n- Input: \"montag zum arzt\"\n  Output: {\"date\": \"montag\", \"title\": \"zum arzt\"}\n\nDo not include explanations in your response, ONLY return the JSON object."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.7,
       "position": [
-        600,
-        340
+        520,
+        520
       ],
-      "id": "946eb97c-3eaf-42a6-808d-3e56df0ff087",
+      "id": "b6e48fd6-9cd7-4547-a035-7d0bf07584e2",
       "name": "AI Agent",
       "onError": "continueErrorOutput"
     },
@@ -341,14 +319,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        600,
-        520
+        520,
+        700
       ],
-      "id": "528d194a-e2a4-4d83-82de-034663902313",
+      "id": "a4790590-a0b8-4e45-8cf9-55f40cf1dc94",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
-          "id": "oby6MMY3dgZaujEN",
+          "id": "Ypd5RzDJLM0Lfh4B",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -362,23 +340,23 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
       "typeVersion": 1,
       "position": [
-        740,
-        560
+        660,
+        740
       ],
-      "id": "1ae89301-b4ab-4475-81a6-3cacace6d714",
+      "id": "be9c0950-9f8f-42cc-b64a-067645a2fc67",
       "name": "Auto-fixing Output Parser"
     },
     {
       "parameters": {
-        "jsonSchemaExample": "{\n\t\"date\": \"20.02.2025\",\n\t\"topic\": \"Uni\"\n}"
+        "jsonSchemaExample": "{\n\t\"date\": \"\",\n\t\"title\": \"\"\n}"
       },
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.2,
       "position": [
-        940,
-        720
+        860,
+        900
       ],
-      "id": "270a430b-637d-4581-96b5-78b448e548c8",
+      "id": "bb94cec8-960c-4587-aa59-072574682c81",
       "name": "Structured Output Parser"
     },
     {
@@ -389,17 +367,28 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        760,
-        720
+        680,
+        900
       ],
-      "id": "e956f0f0-557a-413b-b37f-ab97e002665a",
+      "id": "de77699a-a27b-48ca-9cd7-e184f448b43a",
       "name": "Google Gemini Chat Model1",
       "credentials": {
         "googlePalmApi": {
-          "id": "wqym0GcoV64BnJ0k",
+          "id": "Ypd5RzDJLM0Lfh4B",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        320,
+        520
+      ],
+      "id": "6599efba-8dc9-454e-a5cb-21a9df7802d3",
+      "name": "message1"
     }
   ],
   "pinData": {},
@@ -413,11 +402,6 @@
             "index": 0
           }
         ]
-      ]
-    },
-    "Data": {
-      "main": [
-        []
       ]
     },
     "Set with SessionId": {
@@ -464,7 +448,7 @@
       "main": [
         [
           {
-            "node": "message",
+            "node": "message1",
             "type": "main",
             "index": 0
           }
@@ -486,8 +470,7 @@
             "type": "main",
             "index": 0
           }
-        ],
-        []
+        ]
       ]
     },
     "OpenAI whisper": {
@@ -501,22 +484,11 @@
         ]
       ]
     },
-    "message": {
-      "main": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Set text message1": {
       "main": [
         [
           {
-            "node": "message",
+            "node": "message1",
             "type": "main",
             "index": 0
           }
@@ -584,20 +556,28 @@
           }
         ]
       ]
+    },
+    "message1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
   "settings": {
-    "executionOrder": "v1",
-    "timezone": "Europe/Berlin",
-    "callerPolicy": "workflowsFromSameOwner",
-    "executionTimeout": -1
+    "executionOrder": "v1"
   },
-  "versionId": "78fc88b4-e797-4577-9c42-02ddd2ed4cd2",
+  "versionId": "5683abb4-5c08-424b-8b0f-48150d7e8e72",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "0efefaf848cb55b47d610315256d7fa8b63f4f8843777a47ca589bc607a113a5"
+    "instanceId": "e5c5ecb57167cbf8b7392edbac5a75daf8247bfb13362c335453bb1e5c29a4cf"
   },
-  "id": "T5zb3UkO3cdcS6tN",
+  "id": "GUr11iTYcUxHpTc2",
   "tags": []
 }

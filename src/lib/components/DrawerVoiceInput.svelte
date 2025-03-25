@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { sendWebhook, startRecording, stopRecording } from "$lib/webhook";
+    import { sendWebhook, responseMessage, isError, isSuccess } from "$lib/webhook";
     import { Mic } from "lucide-svelte";
     
     let mediaRecorder: MediaRecorder | null = $state(null);
@@ -19,26 +19,42 @@
 
     async function start(){
         isRecording = true;
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream);
-
-        startRecording(mediaRecorder)
-    }
-
-    async function stop(){
-        isRecording = false;
-        
-        if (mediaRecorder) {
-            const blob = stopRecording(mediaRecorder);
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
             
-            if (!blob) return;
-
-            audioUrl = URL.createObjectURL(blob);
-        } else{
-            console.error("No media recorder found");
+            // Setup the data handling functions before starting recording
+            const chunks: Blob[] = [];
+            
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    chunks.push(event.data);
+                }
+            };
+            
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'audio/webm' });
+                audioBlob = blob;
+                audioUrl = URL.createObjectURL(blob);
+            };
+            
+            mediaRecorder.start();
+        } catch (error) {
+            console.error("Error accessing microphone:", error);
+            isRecording = false;
         }
     }
 
+    function stop(){
+        isRecording = false;
+        
+        if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+            mediaRecorder.stop();
+            mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        } else {
+            console.error("No media recorder found or already stopped");
+        }
+    }
 </script>
 
 <div class="text-center">
@@ -82,7 +98,7 @@
         </div>
     {/if}
 
-    <!-- {#if responseMessage}
+    {#if $responseMessage}
         <div 
             class={`mt-4 p-3 rounded border ${
                 $isSuccess 
@@ -96,5 +112,5 @@
         >
             {$responseMessage}
         </div>
-    {/if} -->
+    {/if}
 </div>
