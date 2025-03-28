@@ -2,8 +2,8 @@ import type { Session, User } from "@supabase/supabase-js";
 import { writable } from "svelte/store";
 
 export interface EventData {
-    topic: number;
     date: string;
+    title: string;
 }
 
 export type UserProfile = {

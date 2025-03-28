@@ -26,7 +26,7 @@ export async function loadProfile() {
 
     userProfile.set({
         displayname: profileData.displayname,
-        events: eventData?.map(event => JSON.parse(event.event)) ?? [],
+        events: eventData?.map(event => event.event) ?? [],
         settings: profileData.settings,
         coins: coinsData?.coins ?? 0
     });
