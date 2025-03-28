@@ -1,8 +1,8 @@
 <script lang="ts">
     import { onDestroy } from 'svelte';
     import { SquareArrowOutUpRight, Plus } from 'lucide-svelte';
-    import { userProfile } from '$lib/auth';
-    import type { EventData } from '$lib/auth';
+    import { userProfile } from '$lib/stores';
+    import type { EventData } from '$lib/stores';
     import { loadProfile } from '$lib/helper';
     import { formatDate, parseDate } from '$lib/date';
     import { sendWebhook } from "$lib/webhook";

@@ -112,7 +112,7 @@
     }
 </script>
 
-<main class="h-screen flex flex-col bg-white p-4 max-w-md mx-auto">
+<main class="flex flex-col">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-3xl font-semibold text-center mt-2 mx-auto">Social</h2>
         <div class="flex items-center bg-gray-100 rounded-full py-1 px-3">
@@ -173,9 +173,5 @@
                 </div>
             {/each}
         {/if}
-    </div>
-
-    <div class="flex-none mt-auto">
-        <Navbar />
     </div>
 </main>
