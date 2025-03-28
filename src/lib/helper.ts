@@ -48,3 +48,15 @@ export async function insertActionById(actionId: number) {
         console.error("Error inserting event:", error)
     }
 }
+
+export async function updateCoinsStore() {
+    const { data: coinsData } = await supabase
+        .from('user_coins')
+        .select("coins")
+        .single()
+
+    userProfile.update((profile) => {
+        if (profile) profile.coins = coinsData?.coins ?? 0;
+        return profile;
+    })
+}
