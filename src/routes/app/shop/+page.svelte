@@ -42,7 +42,7 @@
         </div>
     </div>
 
-    <div class="flex gap-5 m-5 overflow-x-auto">
+    <div class="flex gap-5 m-5 overflow-x-auto pb-2" style="scrollbar-gutter: stable; min-height: 0;">
         {#each tabs as tab, i}
             <button
             onclick={() => activeTab = i}
