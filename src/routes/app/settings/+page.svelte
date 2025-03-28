@@ -3,7 +3,7 @@
     import { ChevronLeft } from "lucide-svelte";
 </script>
 
-<main class="h-screen flex flex-col bg-white p-4 max-w-md mx-auto">
+<main class="flex flex-col">
     <h1
         class="text-3xl font-bold text-center mb-6 flex items-center justify-center"
     >

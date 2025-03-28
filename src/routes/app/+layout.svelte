@@ -4,9 +4,9 @@
     import { loadProfile } from "$lib/helper";
     
     import "$lib/auth";
+    import Navbar from "$lib/components/Navbar.svelte";
 
     user.subscribe((value) => {
-        
         if (!value) {
             goto('/');
         } else {
@@ -17,7 +17,12 @@
 
 
 {#if $user}
-    <slot />
+    <div class="h-screen flex flex-col bg-white p-4 max-w-md mx-auto">
+        <slot />
+        <div class="flex-none mt-auto">
+            <Navbar />
+        </div>
+    </div>
 {:else}
     <p>Lädt...</p>
 {/if}

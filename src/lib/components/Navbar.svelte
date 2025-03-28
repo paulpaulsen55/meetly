@@ -1,17 +1,17 @@
 <script lang="ts">
     import { ShoppingBasket, Mic, Users, Trophy } from "lucide-svelte";
-    import { page } from "$app/stores";
+    import { page } from "$app/state";
     import Drawer from "./Drawer.svelte";
     import DrawerVoiceInput from "./DrawerVoiceInput.svelte";
 
-    $: currentPath = $page?.url?.pathname;
+    const currentPath: string = $derived(page.url.pathname);
 
     function isActive(path: string) {
         return currentPath === path;
     }
 </script>
 
-<div class="border-t-2 border-gray-200 pt-2">
+<nav class="border-t-2 border-gray-200 pt-2 mt-2">
     <div class="flex justify-between items-end">
         <div class="flex space-x-8 ml-4 mb-1">
             <a href="/app/home" class="flex flex-col items-center">
@@ -66,4 +66,4 @@
             </a>
         </div>
     </div>
-</div>
+</nav>

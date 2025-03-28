@@ -3,7 +3,7 @@
     import ShopCard from "$lib/components/shop/ShopCard.svelte";
     import { supabase } from "$lib/supabase";
     import { updateCoinsStore } from "$lib/helper";
-    import { ArrowLeft, Star } from "lucide-svelte";
+    import { Star } from "lucide-svelte";
     import { userProfile } from "$lib/stores";
 
     const tabs = ["Meetcoins", "Tickets", "Cosmetics", "Agents"];
@@ -32,14 +32,8 @@
     }
 </script>
 
-<div class="max-w-md mx-auto h-screen flex flex-col overflow-hidden relative rounded-3xl border border-gray-200 shadow-lg">
+<main class="flex flex-col">
     <div class="px-5 py-4 flex items-center justify-between border-b border-gray-200">
-        <a
-        href="/app/home"
-        class="w-10 h-10 rounded-fullbg-gray-100 flex items-center justify-center"
-        >
-            <ArrowLeft className="w-5 h-5 text-black" />
-        </a>
         <h1 class="text-xl font-bold text-center">Shop</h1>
         <div class="flex items-center gap-1 bg-[#f6f5f8] rounded-full px-3 py-1.5">
             <Star class="w-4 h-4 text-blue-500" />
@@ -72,14 +66,7 @@
             {/each}
         </div>
     {/await}
-
-    <div class="px-5 py-4 border-t border-gray-200 w-full flex text-center mt-auto">
-        <a href="/app/home" class="w-full bg-blue-500 text-white rounded-full py-3 font-medium">
-            Back to App
-        </a>
-    </div>
-</div>
-
+</main>
 <!-- <ShopCard price="200">
     {#snippet icon()}
         <div

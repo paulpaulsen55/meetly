@@ -2,7 +2,6 @@ import { get } from 'svelte/store';
 import { actions, user, userProfile } from './stores'
 import { supabase } from './supabase'
 import { parseDate, formatISODate } from './date'
-import { get } from 'svelte/store'
 
 /**
  * Loads the user profile and user data
