@@ -33,7 +33,7 @@
                 <span class="text-xs mt-1 text-gray-500">Home</span>
             </a>
             <a href="/app/shop" class="flex flex-col items-center">
-                <ShoppingBasket size={40} class={isActive('/app/shop') ? 'text-blue-500 fill-blue-100' : 'text-gray-500'} strokeWidth={1.5} />
+                <ShoppingBasket size={40} class={isActive('/app/shop') ? 'text-blue-500' : 'text-gray-500'} strokeWidth={1.5} />
                 <span class="text-xs mt-1 text-gray-500">Shop</span>
             </a>
         </div>
