@@ -5,6 +5,7 @@
     import { updateCoinsStore } from "$lib/helper";
     import { Star } from "lucide-svelte";
     import { userProfile } from "$lib/stores";
+    import type { ShopItemRow } from "$lib/database";
 
     const tabs = ["Meetcoins", "Tickets", "Cosmetics", "Agents"];
     let activeTab = $state(0);
@@ -15,10 +16,10 @@
             .select("*")
             .order("price", { ascending: true });
         
-        return data;
+        return data as ShopItemRow[];
     }
 
-    async function buyItem(item) {
+    async function buyItem(item: ShopItemRow) {
         console.log("buying item", item);
         
         const { error } = await supabase

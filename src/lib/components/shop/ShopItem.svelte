@@ -1,13 +1,14 @@
 <script lang="ts">
+    import type { ShopItemRow } from "$lib/database";
     import { Star } from "lucide-svelte";
 
     let {
-        item = null,
-        icon = null,
+        item = {} as ShopItemRow,
+        icon = null as null | string,
         onbuy = () => {},
     } = $props();
 
-    const realMoney = item.price.toString().endsWith('€');
+    const realMoney = item.price?.toString().endsWith('€');
 </script>
 
 <div
