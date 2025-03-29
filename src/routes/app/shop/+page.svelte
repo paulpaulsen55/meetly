@@ -7,14 +7,14 @@
     import { userProfile } from "$lib/stores";
     import type { ShopItemRow } from "$lib/database";
 
-    const tabs = ["Meetcoins", "Tickets", "Cosmetics", "Agents"];
+    const tabs = ["Meetcoins", "Tickets", "Booster", "Agents"];
     let activeTab = $state(0);
 
     async function loadStore() {
         const { data } = await supabase
             .from("shop_items")
             .select("*")
-            .order("price", { ascending: true });
+            .order("bonus", { ascending: false });
         
         return data as ShopItemRow[];
     }
