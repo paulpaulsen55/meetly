@@ -27,7 +27,7 @@
             .insert({
                 item_id: item.id,
             })
-        if (error) alert(`Error buying item: ${error}`);
+        if (error) alert(`Error buying item: ${error.message}`);
 
         await updateCoinsStore();
     }
