@@ -2,7 +2,6 @@
     import { supabase } from "$lib/supabase";
     import { goto } from "$app/navigation";
     import { ChevronLeft } from "lucide-svelte";
-    import { user, userProfile } from "$lib/auth";
 
     let email = $state("");
     let password = $state("");
@@ -24,20 +23,13 @@
             const { error: nameError } =  await supabase.from('user_profiles').insert({
                 displayname: displayname
             });
+            if (nameError) throw Error("Displayname already taken");
 
-            //insert streak zero
-            await supabase.from('streaks').insert({
-                streak: 0
-            });
-
-            if (nameError) throw nameError;
-
-            //TODO: set intial streak to 0
+            goto("/login");
         } catch (error) {
             errorMessage = error as string;
         } finally {
             loading = false;
-            goto("/login");
         }
     }
 </script>

@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { userProfile } from "$lib/auth";
+    import { userProfile } from "$lib/stores";
 
     const days = ['M', 'T', 'W', 'T', 'F', 'S'];
     let lastStreakDay = $state(-1);
     let lastStreak = $state("");
 
     userProfile.subscribe((profile) => {
-        lastStreak = profile?.streak.updated_at as string;
+        // lastStreak = profile?.streak.updated_at as string;
     });
 
     const today = new Date();

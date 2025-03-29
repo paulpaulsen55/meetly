@@ -1,17 +1,17 @@
 <script lang="ts">
     import { ShoppingBasket, Mic, Users, Trophy } from "lucide-svelte";
-    import { page } from "$app/stores";
+    import { page } from "$app/state";
     import Drawer from "./Drawer.svelte";
     import DrawerVoiceInput from "./DrawerVoiceInput.svelte";
 
-    $: currentPath = $page?.url?.pathname;
+    const currentPath: string = $derived(page.url.pathname);
 
     function isActive(path: string) {
         return currentPath === path;
     }
 </script>
 
-<div class="border-t-2 border-gray-200 pt-2">
+<nav class="border-t-2 border-gray-200 pt-2 mt-2">
     <div class="flex justify-between items-end">
         <div class="flex space-x-8 ml-4 mb-1">
             <a href="/app/home" class="flex flex-col items-center">
@@ -33,7 +33,7 @@
                 <span class="text-xs mt-1 text-gray-500">Home</span>
             </a>
             <a href="/app/shop" class="flex flex-col items-center">
-                <ShoppingBasket size={40} class="{isActive('/app/shop') ? 'text-blue-500 fill-blue-100' : 'text-gray-500'}" strokeWidth={1.5} />
+                <ShoppingBasket size={40} class={isActive('/app/shop') ? 'text-blue-500' : 'text-gray-500'} strokeWidth={1.5} />
                 <span class="text-xs mt-1 text-gray-500">Shop</span>
             </a>
         </div>
@@ -57,13 +57,13 @@
         
         <div class="flex space-x-8 mr-4 mb-1">
             <a href="/app/social" class="flex flex-col items-center">
-                <Users size={40} class="{isActive('/app/social') ? 'text-blue-500 fill-blue-100' : 'text-gray-500'}" strokeWidth={1.5} />
+                <Users size={40} class={isActive('/app/social') ? 'text-blue-500 fill-blue-100' : 'text-gray-500'} strokeWidth={1.5} />
                 <span class="text-xs mt-1 text-gray-500">Social</span>
             </a>
             <a href="/app/ranked" class="flex flex-col items-center">
-                <Trophy size={40} class="{isActive('/app/ranked') ? 'text-blue-500 fill-blue-100' : 'text-gray-500'}" strokeWidth={1.5} />
+                <Trophy size={40} class={isActive('/app/ranked') ? 'text-blue-500 fill-blue-100' : 'text-gray-500'} strokeWidth={1.5} />
                 <span class="text-xs mt-1 text-gray-500">Ranked</span>
             </a>
         </div>
     </div>
-</div>
+</nav>

@@ -1,42 +1,65 @@
-import { userProfile } from './auth'
+import { get } from 'svelte/store';
+import { actions, user, userProfile } from './stores'
 import { supabase } from './supabase'
 import { parseDate, formatISODate } from './date'
-import { get } from 'svelte/store'
 
 /**
  * Loads the user profile and user data
  */
 export async function loadProfile() {
-  const { data: user } = await supabase.auth.getUser();
-  const userId = user?.user?.id;
+    const { data: profileData } = await supabase
+        .from('user_profiles')
+        .select("displayname, settings")
+        .eq('user_id', get(user)?.id)
+        .single();
   
-  if (!userId) return;
+    const { data: eventData } = await supabase
+        .from('user_events')
+        .select("event")
+    
+    const { data: coinsData } = await supabase
+        .from('user_coins')
+        .select("coins")
+        .single()
 
-  const { data: profileData } = await supabase
-      .from('user_profiles')
-      .select("displayname, settings")
-      .eq('user_id', userId)
-      .maybeSingle();
+    if (!profileData) return
 
-  const { data: streakData } = await supabase
-      .from('user_streaks')
-      .select("streak, updated_at")
-      .eq('user_id', userId)
-      .maybeSingle();
+    userProfile.set({
+        displayname: profileData.displayname,
+        events: eventData?.map(event => event.event) ?? [],
+        settings: profileData.settings,
+        coins: coinsData?.coins ?? 0
+    });
+}
 
-  const { data: eventData } = await supabase
-      .from('user_events')
-      .select("event, id")
-      .eq('user_id', userId);
+export async function loadActions() {
+    const { data: actionsData } = await supabase
+        .from('actions')
+        .select("*")
+        .order('coins', { ascending: false });
 
-  if (!profileData) return;
+    actions.set(actionsData || []);
+}
 
-  userProfile.set({
-      displayname: profileData.displayname,
-      events: eventData ? eventData.map(e => e.event) : [],
-      settings: profileData.settings,
-      streak: streakData ?? { streak: 0, updated_at: '' },
-  });
+export async function insertActionById(actionId: number) {
+    const { error } = await supabase
+        .from('user_actions')
+        .insert({ "action_id" : actionId })
+    if (error) {
+        console.error("Error inserting event:", error)
+    }
+}
+
+export async function updateCoinsStore() {
+    const { data: coinsData } = await supabase
+        .from('user_coins')
+        .select("coins")
+        .single()
+
+    userProfile.update((profile) => {
+        if (profile) profile.coins = coinsData?.coins ?? 0;
+        return profile;
+    })
 }
 
 /**
@@ -191,4 +214,5 @@ export async function addFriend(friendId: string) {
           error: error instanceof Error ? error.message : "Failed to add friend" 
       };
   }
+
 }
