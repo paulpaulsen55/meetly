@@ -37,8 +37,8 @@
         <p class="text-gray-500 text-sm">{item.description}</p>
         {#if !realMoney}
             <div class="flex items-center">
-                <Star class="w-4 h-4 text-blue-500" />
-                <p class="">{item.price}</p>
+                <Star class="w-4 h-4 mt-0.5 text-blue-500" />
+                <p class="pl-0.5 font-semibold">{item.price}</p>
             </div>
         {/if}
         </div>
@@ -51,7 +51,7 @@
             {#if realMoney}
                 {item.price}
             {:else}
-                purchase
+                Buy
             {/if}
         </button>
     </div>
