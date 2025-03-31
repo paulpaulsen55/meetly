@@ -32,15 +32,17 @@ export type Friends = {
 }
 
 export type Quest = {
-    id: string
-    title: string
-    description: string
-    reward: number
-    status: 'active' | 'completed' | 'available'
-    participants?: string[]
-    friend_name?: string
-    initiated?: boolean
-}
+    id: string;
+    title: string;
+    description: string;
+    reward: number;
+    status: 'active' | 'in_progress' | 'completed';
+    participants: string[];
+    friend_name?: string;
+    user1_completed?: boolean;
+    user2_completed?: boolean;
+    initiated?: boolean;
+  };
 
 export type Quests = {
     activeQuests: Quest[]

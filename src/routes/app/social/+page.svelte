@@ -1,17 +1,20 @@
 <script lang="ts">
-    import { Users, UserCheck, Ticket, X } from 'lucide-svelte';
-    import { onMount } from 'svelte';
-    import { friends, userProfile, quests as questsStore } from '$lib/stores';
+    import { Users, UserCheck, Ticket, X, CheckCircle, Clock } from 'lucide-svelte';
+    import { onMount, onDestroy } from 'svelte';
+    import { friends, userProfile, quests, user } from '$lib/stores';
     import { initializeFriends, addFriend } from '$lib/friends';
     import { 
         checkForQuestTicket, 
         loadActiveQuests, 
         createQuestWithFriend, 
         selectQuest,
-        clearSelectedQuest
+        clearSelectedQuest,
+        startQuest,
+        checkQuestProgress
     } from '$lib/quests';
 
     let error = $state('');
+    let activeQuestView = $state(false);
     
     // Initialization
     onMount(() => {
@@ -32,6 +35,11 @@
     const isFriend = (userId: string) => $friends.friendIds.has(userId);
     const isPending = (userId: string) => $friends.pendingRequests.has(userId);
     
+    // Add a helper function to determine which fields to check
+    function isCurrentUser(userId: string) {
+        return userId === ($userProfile?.user_id || $user?.id);
+    }
+    
     // Action handlers
     async function handleAddFriend(userId: string) {
         try {
@@ -50,6 +58,54 @@
             error = err instanceof Error ? err.message : 'An error occurred';
         }
     }
+    
+    async function handleStartQuest() {
+        if (!$quests.selectedQuest) return;
+        
+        try {
+            const result = await startQuest($quests.selectedQuest.id);
+            if (result.success) {
+                activeQuestView = true;
+                // Start checking for quest progress periodically
+                startQuestProgressCheck();
+            } else {
+                error = result.error || 'Failed to start quest';
+            }
+        } catch (err) {
+            error = err instanceof Error ? err.message : 'An error occurred';
+        }
+    }
+    
+    // Check quest progress periodically when in active view
+    let progressInterval: ReturnType<typeof setInterval>;
+    
+    function startQuestProgressCheck() {
+        if (progressInterval) clearInterval(progressInterval);
+        
+        // Check immediately once
+        if ($quests.selectedQuest) {
+            checkQuestProgress($quests.selectedQuest.id);
+        }
+        
+        // Then check every 30 seconds
+        progressInterval = setInterval(() => {
+            if ($quests.selectedQuest) {
+                checkQuestProgress($quests.selectedQuest.id);
+            } else {
+                clearInterval(progressInterval);
+            }
+        }, 30000);
+    }
+    
+    // Clean up interval when component is destroyed
+    onDestroy(() => {
+        if (progressInterval) clearInterval(progressInterval);
+    });
+    
+    function exitActiveQuestView() {
+        activeQuestView = false;
+        if (progressInterval) clearInterval(progressInterval);
+    }
 </script>
 
 <main class="flex flex-col">
@@ -65,24 +121,92 @@
     <!-- Quests section -->
     <h3 class="text-2xl text-gray-500 mb-4 pb-2 border-b border-gray-200">Quests</h3>
     <div class="space-y-3 mb-8">
-        {#if $questsStore.selectedQuest}
+        {#if $quests.selectedQuest && activeQuestView}
+            <!-- Active quest detailed view -->
+            <div class="flex flex-col bg-blue-50 rounded-xl p-4 border border-blue-200">
+                <div class="flex justify-between items-start mb-2">
+                    <h4 class="font-bold text-lg">{$quests.selectedQuest.title}</h4>
+                    <button class="p-1 hover:bg-blue-100 rounded-full" onclick={exitActiveQuestView}>
+                        <X size={18} />
+                    </button>
+                </div>
+                <p class="text-sm mb-3">{$quests.selectedQuest.description}</p>
+                
+                <!-- Quest status and progress -->
+                <div class="bg-white rounded-lg p-3 mb-3 border border-blue-100">
+                    <p class="text-sm font-medium mb-2">Status: 
+                        <span class={$quests.selectedQuest.status === 'completed' ? 
+                            'text-green-500' : 'text-blue-500'}>
+                            {$quests.selectedQuest.status === 'completed' ? 'Completed' : 'In Progress'}
+                        </span>
+                    </p>
+                    
+                    <!-- Participants -->
+                    <p class="text-sm font-medium mb-1">Participants:</p>
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1">
+                            <div class="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs">
+                                {$userProfile?.displayname?.charAt(0) || 'Y'}
+                            </div>
+                            <span class="text-xs">{$userProfile?.displayname || 'You'}</span>
+                            
+                            <!-- Check if the current user is user1 or user2 and show correct status -->
+                            {#if (isCurrentUser($quests.selectedQuest.participants[0]) && $quests.selectedQuest.user1_completed) || 
+                                 (isCurrentUser($quests.selectedQuest.participants[1]) && $quests.selectedQuest.user2_completed)}
+                                <CheckCircle size={14} class="text-green-500" />
+                            {/if}
+                        </div>
+                        
+                        <div class="flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1">
+                            <div class="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs">
+                                {$quests.selectedQuest.friend_name?.charAt(0) || 'F'}
+                            </div>
+                            <span class="text-xs">{$quests.selectedQuest.friend_name}</span>
+                            
+                            <!-- Show friend's completion status -->
+                            {#if (isCurrentUser($quests.selectedQuest.participants[0]) && $quests.selectedQuest.user2_completed) || 
+                                 (isCurrentUser($quests.selectedQuest.participants[1]) && $quests.selectedQuest.user1_completed)}
+                                <CheckCircle size={14} class="text-green-500" />
+                            {/if}
+                        </div>
+                    </div>
+                    
+                    <!-- Progress notice -->
+                    <p class="text-xs text-gray-500">
+                        Complete the quest objective to earn {$quests.selectedQuest.reward} coins!
+                    </p>
+                </div>
+                
+                <!-- Reward information -->
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <Clock size={16} class="text-blue-500" />
+                        <span class="text-sm">Quest active</span>
+                    </div>
+                    <p class="text-sm font-medium text-blue-700">Reward: {$quests.selectedQuest.reward} coins</p>
+                </div>
+            </div>
+        {:else if $quests.selectedQuest}
             <!-- Selected quest details -->
             <div class="flex flex-col bg-blue-50 rounded-xl p-4 border border-blue-200">
                 <div class="flex justify-between items-start mb-2">
-                    <h4 class="font-bold text-lg">{$questsStore.selectedQuest.title}</h4>
+                    <h4 class="font-bold text-lg">{$quests.selectedQuest.title}</h4>
                     <button class="p-1 hover:bg-blue-100 rounded-full" onclick={clearSelectedQuest}>
                         <X size={18} />
                     </button>
                 </div>
-                <p class="text-sm mb-1">{$questsStore.selectedQuest.description}</p>
-                <p class="text-sm font-medium text-blue-700 mb-2">Reward: {$questsStore.selectedQuest.reward} coins</p>
-                <button class="self-end bg-blue-500 text-white rounded-full px-3 py-1 text-xs">
+                <p class="text-sm mb-1">{$quests.selectedQuest.description}</p>
+                <p class="text-sm font-medium text-blue-700 mb-2">Reward: {$quests.selectedQuest.reward} coins</p>
+                <button 
+                    class="self-end bg-blue-500 text-white rounded-full px-3 py-1 text-xs"
+                    onclick={handleStartQuest}
+                >
                     Start Quest
                 </button>
             </div>
-        {:else if $questsStore.activeQuests.length > 0}
+        {:else if $quests.activeQuests.length > 0}
             <!-- Active quests list -->
-            {#each $questsStore.activeQuests as quest}
+            {#each $quests.activeQuests as quest}
                 <div class="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
                     <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
                         <Users class="w-5 h-5 text-blue-500" />
@@ -108,7 +232,7 @@
         {/if}
         
         <!-- Quest ticket notification -->
-        {#if $questsStore.hasTicket}
+        {#if $quests.hasTicket}
             <div class="flex items-center gap-2 justify-center bg-blue-50 rounded-xl p-3 border border-blue-200">
                 <Ticket size={16} class="text-blue-500" />
                 <p class="text-sm text-blue-700">You have Friend Quest tickets! Click on a friend to start a quest.</p>
@@ -140,7 +264,7 @@
                     </div>
                     
                     <!-- Friend action buttons -->
-                    {#if isFriend(user.user_id) && $questsStore.hasTicket}
+                    {#if isFriend(user.user_id) && $quests.hasTicket}
                         <button 
                             class="bg-green-500 text-white rounded-full px-3 py-1 text-xs cursor-pointer flex items-center gap-1"
                             onclick={() => handleCreateQuest(user.user_id)}
