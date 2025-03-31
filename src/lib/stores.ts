@@ -31,6 +31,26 @@ export type Friends = {
     pendingRequests: Set<string>
 }
 
+export type Quest = {
+    id: string
+    title: string
+    description: string
+    reward: number
+    status: 'active' | 'completed' | 'available'
+    participants?: string[]
+    friend_name?: string
+    initiated?: boolean
+}
+
+export type Quests = {
+    activeQuests: Quest[]
+    hasTicket: boolean
+    selectedQuest: Quest | null
+    loading: boolean
+    error: string | null
+    friendsQuests?: Record<string, Quest[]> 
+}
+
 export const user = writable<User | null>(null)
 export const session = writable<Session | null>(null)
 export const userProfile = writable<UserProfile | null>(null)
@@ -43,3 +63,11 @@ export const friends = writable<Friends>({
     error: null,
     pendingRequests: new Set<string>()
 })
+export const quests = writable<Quests>({
+    activeQuests: [],
+    hasTicket: false,
+    selectedQuest: null,
+    loading: false,
+    error: null,
+    friendsQuests: {}
+});

@@ -1,4 +1,4 @@
-import { writable, get } from 'svelte/store';
+import { get } from 'svelte/store';
 import { supabase } from './supabase';
 import { user, friends } from './stores';
 

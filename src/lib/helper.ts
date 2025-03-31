@@ -7,59 +7,63 @@ import { parseDate, formatISODate } from './date'
  * Loads the user profile and user data
  */
 export async function loadProfile() {
-    const { data: profileData } = await supabase
-        .from('user_profiles')
-        .select("displayname, settings")
-        .eq('user_id', get(user)?.id)
-        .single();
+  const currentUser = get(user);
+  if (!currentUser?.id) return;
+
+  const { data: profileData } = await supabase
+      .from('user_profiles')
+      .select("displayname, settings")
+      .eq('user_id', currentUser.id)
+      .single();
+
+  const { data: eventData } = await supabase
+      .from('user_events')
+      .select("event")
   
-    const { data: eventData } = await supabase
-        .from('user_events')
-        .select("event")
-    
-    const { data: coinsData } = await supabase
-        .from('user_coins')
-        .select("coins")
-        .single()
+  const { data: coinsData } = await supabase
+      .from('user_coins')
+      .select("coins")
+      .single()
 
-    if (!profileData) return
+  if (!profileData) return
 
-    userProfile.set({
-        displayname: profileData.displayname,
-        events: eventData?.map(event => event.event) ?? [],
-        settings: profileData.settings,
-        coins: coinsData?.coins ?? 0
-    });
+  userProfile.set({
+      displayname: profileData.displayname,
+      events: eventData?.map(event => event.event) ?? [],
+      settings: profileData.settings,
+      coins: coinsData?.coins ?? 0,
+      user_id: currentUser.id
+  });
 }
 
 export async function loadActions() {
-    const { data: actionsData } = await supabase
-        .from('actions')
-        .select("*")
-        .order('coins', { ascending: false });
+  const { data: actionsData } = await supabase
+      .from('actions')
+      .select("*")
+      .order('coins', { ascending: false });
 
-    actions.set(actionsData || []);
+  actions.set(actionsData || []);
 }
 
 export async function insertActionById(actionId: number) {
-    const { error } = await supabase
-        .from('user_actions')
-        .insert({ "action_id" : actionId })
-    if (error) {
-        console.error("Error inserting event:", error)
-    }
+  const { error } = await supabase
+      .from('user_actions')
+      .insert({ "action_id" : actionId })
+  if (error) {
+      console.error("Error inserting event:", error)
+  }
 }
 
 export async function updateCoinsStore() {
-    const { data: coinsData } = await supabase
-        .from('user_coins')
-        .select("coins")
-        .single()
+  const { data: coinsData } = await supabase
+      .from('user_coins')
+      .select("coins")
+      .single()
 
-    userProfile.update((profile) => {
-        if (profile) profile.coins = coinsData?.coins ?? 0;
-        return profile;
-    })
+  userProfile.update((profile) => {
+      if (profile) profile.coins = coinsData?.coins ?? 0;
+      return profile;
+  })
 }
 
 /**
