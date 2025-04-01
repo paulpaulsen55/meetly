@@ -84,12 +84,12 @@
     
     // Clean up interval when component is destroyed
     onDestroy(() => {
-        if (progressInterval) clearInterval(progressInterval);
+        // if (progressInterval) clearInterval(progressInterval);
     });
     
     function exitActiveQuestView() {
         activeQuestView = false;
-        if (progressInterval) clearInterval(progressInterval);
+        // if (progressInterval) clearInterval(progressInterval);
     }
 </script>
 

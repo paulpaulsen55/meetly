@@ -5,7 +5,6 @@ import type { Quest } from './database'
 
 // Helper for common error handling pattern
 const handleError = (err: unknown) => err instanceof Error ? err.message : 'An error occurred';
-const currentUserId = get(user)?.id;
 
 // Check if user has quest tickets
 export async function checkForQuestTicket() {
@@ -21,7 +20,7 @@ export async function checkForQuestTicket() {
 }
 
 // Get all quests for the current user
-export async function getAllQuests() {
+export async function getAllQuests(_: any = null) {
     const { data: questsData, error } = await supabase
         .from('user_quests')
         .select(`
@@ -34,6 +33,9 @@ export async function getAllQuests() {
         console.log("Quests data:", questsData, error);
     
     if (!questsData) return [];
+
+    const currentUserId = get(user)?.id;
+
     // Format quest data
     const activeQuests = questsData.map(item => {
         return {
@@ -66,7 +68,7 @@ export async function createQuestWithFriend(friendId: string) {
     ]);
 }
 
-export async function confirmQuest(questId: string) {
+export async function confirmQuest(questId: number) {
     await supabase.from('user_quests')
         .update({ status: 'in_progress' })
         .eq('quest_id', questId);

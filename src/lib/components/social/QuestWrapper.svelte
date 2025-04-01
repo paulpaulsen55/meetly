@@ -1,15 +1,19 @@
 <script lang="ts">
     import { confirmQuest, getAllQuests } from "$lib/quests";
-    import { userProfile, user } from "$lib/stores";
     import { CheckCircle, Clock, Users, X } from "lucide-svelte";
-    import { get } from "svelte/store";
 
     let activeQuest = $state(-1);
+    let invalidate = $state(false);
+
+    async function startQuest(questId: number) {
+        invalidate = !invalidate;
+        await confirmQuest(questId);
+    }
 </script>
 
 <h3 class="text-2xl text-gray-500 mb-4 pb-2 border-b border-gray-200">Quests</h3>
     <div class="space-y-3 mb-8">
-        {#await getAllQuests()}
+        {#await getAllQuests(invalidate)}
             Loading
         {:then quests}
             {#each quests as quest, i}
@@ -37,9 +41,9 @@
                             <div class="flex items-center gap-2 mb-2">
                                 <div class="flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1">
                                     <div class="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs">
-                                        {$userProfile?.displayname?.charAt(0) || 'Y'}
+                                        {quest.initiated.displayname.charAt(0)}
                                     </div>
-                                    <span class="text-xs">{$userProfile?.displayname || 'You'}</span>
+                                    <span class="text-xs">{quest.initiated.displayname}</span>
                                     
                                     <!-- Check if the current user is user1 or user2 and show correct status -->
                                     {#if (quest.isFriend && quest.friend_completed) || 
@@ -50,7 +54,7 @@
                                 
                                 <div class="flex items-center gap-2 bg-gray-100 rounded-full px-2 py-1">
                                     <div class="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs">
-                                        {quest.friend.displayname.charAt(0) || 'F'}
+                                        {quest.friend.displayname.charAt(0)}
                                     </div>
                                     <span class="text-xs">{quest.friend.displayname}</span>
                                     
@@ -70,14 +74,16 @@
                         
                         <!-- Reward information -->
                         <div class="flex justify-between items-center">
-                            <p class="text-sm font-medium text-blue-700">Reward: {quest.reward} coins</p>
+                            <p class="text-sm font-medium">Reward: {quest.reward} coins</p>
                             {#if quest.isFriend && quest.status === 'active'}
                                 <button 
                                     class="bg-blue-500 text-white rounded-full px-3 py-1 text-xs"
-                                    onclick={() => confirmQuest(quest.id)}
+                                    onclick={() => startQuest(quest.id)}
                                 >
                                     start
                                 </button>
+                            {:else if quest.status === 'active'}
+                                <p class="text-sm font-medium text-blue-700">waiting for friend...</p>
                             {/if}
                         </div>
                     </div>  
