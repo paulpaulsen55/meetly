@@ -11,7 +11,6 @@ export type UserProfile = {
     displayname: string
     settings: any
     coins: number
-    user_id: string
 }
 
 export type Action = {
@@ -31,27 +30,6 @@ export type Friends = {
     pendingRequests: Set<string>
 }
 
-export type Quest = {
-    id: string;
-    title: string;
-    description: string;
-    reward: number;
-    status: 'active' | 'in_progress' | 'completed';
-    participants: string[];
-    friend_name?: string;
-    user1_completed?: boolean;
-    user2_completed?: boolean;
-    initiated?: boolean;
-  };
-
-export type Quests = {
-    activeQuests: Quest[]
-    hasTicket: boolean
-    selectedQuest: Quest | null
-    error: string | null
-    friendsQuests?: Record<string, Quest[]> 
-}
-
 export const user = writable<User | null>(null)
 export const session = writable<Session | null>(null)
 export const userProfile = writable<UserProfile | null>(null)
@@ -64,10 +42,3 @@ export const friends = writable<Friends>({
     error: null,
     pendingRequests: new Set<string>()
 })
-export const quests = writable<Quests>({
-    activeQuests: [],
-    hasTicket: false,
-    selectedQuest: null,
-    error: null,
-    friendsQuests: {}
-});
