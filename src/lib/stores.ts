@@ -48,7 +48,6 @@ export type Quests = {
     activeQuests: Quest[]
     hasTicket: boolean
     selectedQuest: Quest | null
-    loading: boolean
     error: string | null
     friendsQuests?: Record<string, Quest[]> 
 }
@@ -69,7 +68,6 @@ export const quests = writable<Quests>({
     activeQuests: [],
     hasTicket: false,
     selectedQuest: null,
-    loading: false,
     error: null,
     friendsQuests: {}
 });
