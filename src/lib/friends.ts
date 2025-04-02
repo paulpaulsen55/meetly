@@ -15,7 +15,13 @@ export async function fetchUsers() {
         
         // Filter out the current user
         const currentUserId = get(user)?.id;
-        const otherUsers = data?.filter(user => user.user_id !== currentUserId) || [];
+        const otherUsers = data?.filter(user => user.user_id !== currentUserId)
+            .map(user => ({
+                ...user,
+                events: [],
+                settings: {},
+                coins: 0
+            })) || [];
         
         friends.update(s => ({ 
             ...s, 

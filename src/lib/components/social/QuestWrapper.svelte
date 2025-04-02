@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { confirmQuest, getAllQuests } from "$lib/quests";
-    import { CheckCircle, Clock, Users, X } from "lucide-svelte";
+    import { confirmQuest, getAllQuests, checkForQuestTicket } from "$lib/quests";
+    import { CheckCircle, Users, X, Ticket } from "lucide-svelte";
 
     let activeQuest = $state(-1);
     let invalidate = $state(false);
@@ -114,10 +114,14 @@
         {/await}
         
         <!-- Quest ticket notification -->
-        <!-- {#if $quests.hasTicket}
-            <div class="flex items-center gap-2 justify-center bg-blue-50 rounded-xl p-3 border border-blue-200">
-                <Ticket size={16} class="text-blue-500" />
-                <p class="text-sm text-blue-700">You have Friend Quest tickets! Click on a friend to start a quest.</p>
-            </div>
-        {/if} -->
+        {#await checkForQuestTicket()}
+            <!-- Optional loading state -->
+        {:then hasTicket}
+            {#if hasTicket}
+                <div class="flex items-center gap-2 justify-center bg-blue-50 rounded-xl p-3 border border-blue-200">
+                    <Ticket size={16} class="text-blue-500" />
+                    <p class="text-sm text-blue-700">You have Friend Quest tickets! Click on a friend to start a quest.</p>
+                </div>
+            {/if}
+        {/await}
     </div>
