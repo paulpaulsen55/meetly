@@ -6,6 +6,7 @@
     import { loadProfile } from '$lib/helper';
     import { formatDate, parseDate } from '$lib/date';
     import { sendWebhook } from "$lib/webhook";
+    import { supabase } from '$lib/supabase';
 
     let events = $state<EventData[]>([]);
     let newEventText = $state("");
@@ -52,6 +53,14 @@
             loading = false;
         }
     }
+
+    async function test(){
+        const {error} = await supabase.from("user_actions").insert({
+            action_id: 6,
+        });
+        console.log(error);
+        
+    }
 </script>
 
 <div class="h-full flex">
@@ -89,7 +98,9 @@
                                     <span class="text-gray-500">@{formatDate(event.date)}:</span> {event.title}
                                 </p>
                             </div>
-                            <SquareArrowOutUpRight size="20" class="hover:text-blue-500 cursor-pointer" />
+                            <button onclick={() => test()}>
+                                <SquareArrowOutUpRight size="20" class="hover:text-blue-500 cursor-pointer" />
+                            </button>
                         </div>
                     </div>
                 {/each}
