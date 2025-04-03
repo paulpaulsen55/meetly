@@ -2,16 +2,9 @@
     import { UserCheck } from 'lucide-svelte';
     import QuestWrapper from '$lib/components/social/QuestWrapper.svelte';
     import FriendWrapper from '$lib/components/social/FriendWrapper.svelte';
-    import { loadFriendsCount } from '$lib/friends';
-    import { onMount } from 'svelte';
     import type { PageProps } from './$types';
 
     let { data }: PageProps = $props();
-
-    onMount(async () => {
-        const count = await loadFriendsCount();
-        friendCount.set(count);
-    });
 </script>
 
 <main class="flex flex-col">
