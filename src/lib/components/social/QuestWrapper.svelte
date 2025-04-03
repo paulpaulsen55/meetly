@@ -28,7 +28,7 @@
                     <!-- Quest status and progress -->
                     <div class="bg-white rounded-lg p-3 mb-3 border border-blue-100">
                         <p class="text-sm font-medium mb-2">Status: 
-                            <span class={quest.status === 'completed' ? 
+                            <span class={quest.status === 'done' ? 
                                 'text-green-500' : 'text-blue-500'}>
                                 {quest.status}
                             </span>
@@ -82,8 +82,21 @@
                             </button>
                         {:else if quest.status === 'active'}
                             <p class="text-sm font-medium text-blue-700">waiting for friend...</p>
+                        {:else if quest.status === 'done'}
+                            <div class="flex items-center gap-2">
+                                <CheckCircle size={16} class="text-green-500" />
+                                <p class="text-sm font-medium text-green-600">Quest completed!</p>
+                            </div>
                         {/if}
                     </div>
+
+                    <!-- Add celebration banner for completed quests -->
+                    {#if quest.status === 'done'}
+                        <div class="mt-3 bg-green-50 border border-green-200 rounded-lg p-3 text-center">
+                            <p class="text-green-700 font-medium">Congratulations!</p>
+                            <p class="text-sm text-green-600">You've earned {quest.reward} coins for completing this quest!</p>
+                        </div>
+                    {/if}
                 </div>  
             {:else}
                 <div class="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
