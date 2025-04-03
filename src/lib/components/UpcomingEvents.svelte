@@ -35,6 +35,17 @@
     });
     onDestroy(unsubscribe);
 
+    function isToday(dateString: string): boolean {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const eventDate = parseDate(dateString);
+        if (!eventDate) return false;
+
+        eventDate.setHours(0, 0, 0, 0);
+        return eventDate.getTime() === today.getTime();
+    }
+
     async function handleAddEvent() {
         if (!newEventText.trim()) return;
         
@@ -54,12 +65,28 @@
         }
     }
 
-    async function test(){
-        const {error} = await supabase.from("user_actions").insert({
-            action_id: 6,
-        });
-        console.log(error);
-        
+    async function confirmEvent(event: EventData) {
+        try {            
+            const { data, error: rpcError } = await supabase.rpc('confirm_event', {
+                event_title: event.title,
+                event_date: event.date
+            });
+            
+            if (rpcError) throw rpcError;
+            
+            const { error } = await supabase
+                .from("user_actions")
+                .insert({
+                    action_id: 6,
+                });
+
+            if (error) throw error;
+
+            // Refresh the profile
+            await loadProfile();
+        } catch (error) {
+            console.error("Error confirming event:", error);
+        }
     }
 </script>
 
@@ -98,9 +125,21 @@
                                     <span class="text-gray-500">@{formatDate(event.date)}:</span> {event.title}
                                 </p>
                             </div>
-                            <button onclick={() => test()}>
-                                <SquareArrowOutUpRight size="20" class="hover:text-blue-500 cursor-pointer" />
-                            </button>
+                            {#if isToday(event.date) && !event.is_complete}
+                                <button 
+                                    onclick={() => confirmEvent(event)} 
+                                    class="text-green-500 hover:text-green-600 cursor-pointer"
+                                    >
+                                    <SquareArrowOutUpRight size="20" class="cursor-pointer" />
+                                </button>
+                            {:else}
+                                <button 
+                                    disabled={true}
+                                    class="text-gray-300 cursor-not-allowed"
+                                >
+                                    <SquareArrowOutUpRight size="20" />
+                                </button>
+                            {/if}
                         </div>
                     </div>
                 {/each}

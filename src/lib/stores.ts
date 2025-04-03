@@ -1,10 +1,10 @@
 import type { Session, User } from "@supabase/supabase-js";
 import { writable } from "svelte/store";
-import type { Quest } from "./database";
 
 export interface EventData {
     date: string;
     title: string;
+    is_complete: boolean;
 }
 
 export type UserProfile = {
