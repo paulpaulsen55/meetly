@@ -32,7 +32,6 @@ export async function loadProfile() {
       events: eventData?.map(event => event.event) ?? [],
       settings: profileData.settings,
       coins: coinsData?.coins ?? 0,
-      user_id: currentUser.id
   });
 }
 

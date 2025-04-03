@@ -1,7 +1,6 @@
 export type ShopItemRow = Database['public']['Tables']['shop_items']['Row'];
 export type Quest = Database['public']['Tables']['user_quests']['Row'];
 
-
 export type Json =
   | string
   | number
@@ -132,18 +131,21 @@ export type Database = {
         Row: {
           description: string | null
           id: number
+          keywords: string[] | null
           prize: number | null
           title: string | null
         }
         Insert: {
           description?: string | null
           id?: number
+          keywords?: string[] | null
           prize?: number | null
           title?: string | null
         }
         Update: {
           description?: string | null
           id?: number
+          keywords?: string[] | null
           prize?: number | null
           title?: string | null
         }
@@ -197,16 +199,19 @@ export type Database = {
         Row: {
           event: Json | null
           id: number
+          is_complete: boolean | null
           user_id: string
         }
         Insert: {
           event?: Json | null
           id?: number
+          is_complete?: boolean | null
           user_id?: string
         }
         Update: {
           event?: Json | null
           id?: number
+          is_complete?: boolean | null
           user_id?: string
         }
         Relationships: []
@@ -260,53 +265,53 @@ export type Database = {
       }
       user_quests: {
         Row: {
+          friend: string
+          friend_completed: boolean | null
           id: number
+          initiated: string
+          initiated_completed: boolean | null
           quest_id: number
           status: string | null
-          user1: string
-          user1_completed: boolean | null
-          user2: string
-          user2_completed: boolean | null
         }
         Insert: {
+          friend: string
+          friend_completed?: boolean | null
           id?: number
+          initiated?: string
+          initiated_completed?: boolean | null
           quest_id: number
           status?: string | null
-          user1?: string
-          user1_completed?: boolean | null
-          user2: string
-          user2_completed?: boolean | null
         }
         Update: {
+          friend?: string
+          friend_completed?: boolean | null
           id?: number
+          initiated?: string
+          initiated_completed?: boolean | null
           quest_id?: number
           status?: string | null
-          user1?: string
-          user1_completed?: boolean | null
-          user2?: string
-          user2_completed?: boolean | null
         }
         Relationships: [
+          {
+            foreignKeyName: "user_quests_friend_fkey"
+            columns: ["friend"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "user_quests_initiated_fkey"
+            columns: ["initiated"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["user_id"]
+          },
           {
             foreignKeyName: "user_quests_quest_id_fkey"
             columns: ["quest_id"]
             isOneToOne: false
             referencedRelation: "social_quests"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_quests_user1_fkey"
-            columns: ["user1"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
-            foreignKeyName: "user_quests_user2_fkey"
-            columns: ["user2"]
-            isOneToOne: false
-            referencedRelation: "user_profiles"
-            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -320,6 +325,16 @@ export type Database = {
           friend_id: string
         }
         Returns: undefined
+      }
+      get_users_and_friends: {
+        Args: {
+          current_user_id: string
+        }
+        Returns: {
+          user_id: string
+          displayname: string
+          is_friend: boolean
+        }[]
       }
       has_started_quest: {
         Args: {

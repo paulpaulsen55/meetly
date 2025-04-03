@@ -4,17 +4,17 @@ import { user } from './stores';
 
 // Check if user has quest tickets
 export async function checkForQuestTicket() {
-  const { data, error } = await supabase
-      .from('user_items')
-      .select('*')
-      .eq('item_id', 5);
+    const { count, error } = await supabase
+        .from('user_items')
+        .select('*', { count: 'exact' })
+        .eq('item_id', 5);
 
-  const hasTicket = data && data.length > 0 && !error ? true : false;
-  return hasTicket;
+    const hasTicket = count && count >= 1 && !error ? true : false;
+    return hasTicket;
 }
 
 // Get all quests for the current user
-export async function getAllQuests(_: any = null) {
+export async function getAllQuests() {
     const { data: questsData, error } = await supabase
         .from('user_quests')
         .select(`
@@ -23,9 +23,7 @@ export async function getAllQuests(_: any = null) {
             initiated:user_profiles!user_quests_initiated_fkey(user_id, displayname),
             friend:user_profiles!user_quests_friend_fkey(user_id, displayname)
         `)
-    
-        console.log("Quests data:", questsData, error);
-    
+
     if (!questsData) return [];
 
     const currentUserId = get(user)?.id;
@@ -45,7 +43,7 @@ export async function getAllQuests(_: any = null) {
             isFriend: item.friend.user_id === currentUserId ? true : false,
         };
     });
-    
+
 
     return activeQuests;
 }

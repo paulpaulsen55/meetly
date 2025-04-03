@@ -1,5 +1,6 @@
 import type { Session, User } from "@supabase/supabase-js";
 import { writable } from "svelte/store";
+import type { Quest } from "./database";
 
 export interface EventData {
     date: string;
@@ -21,24 +22,7 @@ export type Action = {
     icon?: string
 }
 
-export type Friends = {
-    users: UserProfile[]
-    friendIds: Set<string>
-    friendCount: number
-    loading: boolean
-    error: string | null
-    pendingRequests: Set<string>
-}
-
 export const user = writable<User | null>(null)
 export const session = writable<Session | null>(null)
 export const userProfile = writable<UserProfile | null>(null)
 export const actions = writable<Action[]>([])
-export const friends = writable<Friends>({
-    users: [],
-    friendIds: new Set<string>(),
-    friendCount: 0,
-    loading: false,
-    error: null,
-    pendingRequests: new Set<string>()
-})
