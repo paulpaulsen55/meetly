@@ -4,7 +4,7 @@ import { writable } from "svelte/store";
 export interface EventData {
     date: string;
     title: string;
-    is_complete: boolean;
+    is_complete?: boolean;
 }
 
 export type UserProfile = {

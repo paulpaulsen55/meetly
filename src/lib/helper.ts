@@ -18,7 +18,7 @@ export async function loadProfile() {
 
   const { data: eventData } = await supabase
       .from('user_events')
-      .select("event")
+      .select("event, is_complete")
   
   const { data: coinsData } = await supabase
       .from('user_coins')
@@ -28,10 +28,13 @@ export async function loadProfile() {
   if (!profileData) return
 
   userProfile.set({
-      displayname: profileData.displayname,
-      events: eventData?.map(event => event.event) ?? [],
-      settings: profileData.settings,
-      coins: coinsData?.coins ?? 0,
+    displayname: profileData.displayname,
+    events: eventData?.map(row => ({
+      ...row.event,
+      is_complete: row.is_complete,
+    })) ?? [],
+    settings: profileData.settings,
+    coins: coinsData?.coins ?? 0,
   });
 }
 
@@ -109,55 +112,5 @@ export async function addEvent(eventData: { date: string, title: string }) {
           success: false, 
           error: error instanceof Error ? error.message : "Failed to add event" 
       };
-  }
-}
-
-/**
- * Fetches all users from the database
- * @returns Object with success status, error message if any, and array of user profiles
- */
-export async function getAllUsers() {
-  try {
-    const { data, error } = await supabase
-      .from('user_profiles')
-      .select('displayname, user_id');
-    
-    if (error) {
-      console.error("Error fetching users:", error.message);
-      return { 
-        success: false, 
-        error: error.message, 
-        users: [] 
-      };
-    }
-    
-    // Filter out the current user
-    const { data: currentUser } = await supabase.auth.getUser();
-    const currentUserId = currentUser?.user?.id;
-    
-    if (!currentUserId) {
-      return { 
-        success: true, 
-        users: data || [] 
-      };
-    }
-    
-    const otherUsers = data?.filter(user => 
-      user.user_id !== currentUserId
-    ) || [];
-    
-    console.log(`Filtered users: ${otherUsers.length} of ${data?.length || 0} total`);
-    
-    return { 
-      success: true, 
-      users: otherUsers 
-    };
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : "Failed to fetch users",
-      users: []
-    };
   }
 }

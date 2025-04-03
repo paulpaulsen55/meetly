@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onDestroy } from 'svelte';
-    import { SquareArrowOutUpRight, Plus } from 'lucide-svelte';
+    import { CircleCheck, Plus } from 'lucide-svelte';
     import { userProfile } from '$lib/stores';
     import type { EventData } from '$lib/stores';
     import { loadProfile } from '$lib/helper';
@@ -11,6 +11,7 @@
     let events = $state<EventData[]>([]);
     let newEventText = $state("");
     let loading = $state(false);
+    let isComplete = $state(false);
     
     const unsubscribe = userProfile.subscribe((value) => {
         if (value?.events) {
@@ -71,19 +72,11 @@
                 event_title: event.title,
                 event_date: event.date
             });
-            
             if (rpcError) throw rpcError;
-            
-            const { error } = await supabase
-                .from("user_actions")
-                .insert({
-                    action_id: 6,
-                });
 
-            if (error) throw error;
-
-            // Refresh the profile
             await loadProfile();
+
+            return data;
         } catch (error) {
             console.error("Error confirming event:", error);
         }
@@ -125,19 +118,19 @@
                                     <span class="text-gray-500">@{formatDate(event.date)}:</span> {event.title}
                                 </p>
                             </div>
-                            {#if isToday(event.date) && !event.is_complete}
+                            {#if isToday(event.date) && event.is_complete == false}
                                 <button 
                                     onclick={() => confirmEvent(event)} 
                                     class="text-green-500 hover:text-green-600 cursor-pointer"
                                     >
-                                    <SquareArrowOutUpRight size="20" class="cursor-pointer" />
+                                    <CircleCheck size="20" class="cursor-pointer" />
                                 </button>
                             {:else}
                                 <button 
                                     disabled={true}
                                     class="text-gray-300 cursor-not-allowed"
                                 >
-                                    <SquareArrowOutUpRight size="20" />
+                                    <CircleCheck size="20" />
                                 </button>
                             {/if}
                         </div>
