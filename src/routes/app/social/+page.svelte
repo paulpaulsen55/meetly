@@ -3,7 +3,6 @@
     import QuestWrapper from '$lib/components/social/QuestWrapper.svelte';
     import FriendWrapper from '$lib/components/social/FriendWrapper.svelte';
     import { loadFriendsCount } from '$lib/friends';
-    import { friendCount } from '$lib/stores';
     import { onMount } from 'svelte';
     import type { PageProps } from './$types';
 
