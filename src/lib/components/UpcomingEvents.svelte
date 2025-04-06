@@ -11,7 +11,6 @@
     let events = $state<EventData[]>([]);
     let newEventText = $state("");
     let loading = $state(false);
-    let isComplete = $state(false);
     
     const unsubscribe = userProfile.subscribe((value) => {
         if (value?.events) {
@@ -23,7 +22,7 @@
             events = value.events
                 .filter(event => {
                     const eventDate = parseDate(event.date);
-                    return eventDate && eventDate >= today;
+                    return eventDate && eventDate >= today && !event.is_complete;
                 })
                 .sort((a, b) => {
                     const dateA = parseDate(a.date) || new Date();
