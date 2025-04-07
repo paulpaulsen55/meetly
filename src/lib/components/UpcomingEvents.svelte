@@ -1,11 +1,12 @@
 <script lang="ts">
     import { onDestroy } from 'svelte';
-    import { SquareArrowOutUpRight, Plus } from 'lucide-svelte';
+    import { CircleCheck, Plus } from 'lucide-svelte';
     import { userProfile } from '$lib/stores';
     import type { EventData } from '$lib/stores';
     import { loadProfile } from '$lib/helper';
     import { formatDate, parseDate } from '$lib/date';
     import { sendWebhook } from "$lib/webhook";
+    import { supabase } from '$lib/supabase';
 
     let events = $state<EventData[]>([]);
     let newEventText = $state("");
@@ -21,7 +22,7 @@
             events = value.events
                 .filter(event => {
                     const eventDate = parseDate(event.date);
-                    return eventDate && eventDate >= today;
+                    return eventDate && eventDate >= today && !event.is_complete;
                 })
                 .sort((a, b) => {
                     const dateA = parseDate(a.date) || new Date();
@@ -33,6 +34,17 @@
         }
     });
     onDestroy(unsubscribe);
+
+    function isToday(dateString: string): boolean {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const eventDate = parseDate(dateString);
+        if (!eventDate) return false;
+
+        eventDate.setHours(0, 0, 0, 0);
+        return eventDate.getTime() === today.getTime();
+    }
 
     async function handleAddEvent() {
         if (!newEventText.trim()) return;
@@ -50,6 +62,22 @@
             console.error("Error adding event:", error);
         } finally {
             loading = false;
+        }
+    }
+
+    async function confirmEvent(event: EventData) {
+        try {            
+            const { data, error: rpcError } = await supabase.rpc('confirm_event', {
+                event_title: event.title,
+                event_date: event.date
+            });
+            if (rpcError) throw rpcError;
+
+            await loadProfile();
+
+            return data;
+        } catch (error) {
+            console.error("Error confirming event:", error);
         }
     }
 </script>
@@ -89,7 +117,21 @@
                                     <span class="text-gray-500">@{formatDate(event.date)}:</span> {event.title}
                                 </p>
                             </div>
-                            <SquareArrowOutUpRight size="20" class="hover:text-blue-500 cursor-pointer" />
+                            {#if isToday(event.date) && event.is_complete == false}
+                                <button 
+                                    onclick={() => confirmEvent(event)} 
+                                    class="text-green-500 hover:text-green-600 cursor-pointer"
+                                    >
+                                    <CircleCheck size="20" class="cursor-pointer" />
+                                </button>
+                            {:else}
+                                <button 
+                                    disabled={true}
+                                    class="text-gray-300 cursor-not-allowed"
+                                >
+                                    <CircleCheck size="20" />
+                                </button>
+                            {/if}
                         </div>
                     </div>
                 {/each}
