@@ -27,7 +27,7 @@
 </script>
 
 <h3 class="text-2xl text-gray-500 mb-4 pb-2 border-b border-gray-200">Friends</h3>
-<div class="space-y-3 mb-8 max-h-92 overflow-y-auto pr-2">
+<div class="space-y-3 mb-8 max-h-92 sm:max-h-64 overflow-y-auto pr-2">
     {#if error}
         <p class="text-center text-red-500">{error}</p>
     {/if}
