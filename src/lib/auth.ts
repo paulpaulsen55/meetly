@@ -12,7 +12,6 @@ supabase.auth.getSession().then(({ data }) => {
 supabase.auth.onAuthStateChange(async (event, newSession) => {
     session.set(newSession)
     user.set(newSession?.user || null)
-    
 
     if (event == "SIGNED_OUT") {
         user.set(null)

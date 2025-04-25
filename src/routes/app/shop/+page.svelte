@@ -1,6 +1,5 @@
 <script lang="ts">
     import ShopItem from "$lib/components/shop/ShopItem.svelte";
-    import ShopCard from "$lib/components/shop/ShopCard.svelte";
     import { supabase } from "$lib/supabase";
     import { updateCoinsStore } from "$lib/helper";
     import { Star } from "lucide-svelte";
@@ -68,18 +67,3 @@
         </div>
     {/await}
 </main>
-<!-- <ShopCard price="200">
-    {#snippet icon()}
-        <div
-            class="w-full aspect-square rounded-xl mb-2 flex items-center justify-center"
-            style={`background: ${"#9c27b0"}20`}
-        >
-            <div
-                class="w-12 h-12 rounded-full"
-                style={`background: ${"#9c27b0"}`}
-            >
-                <Palette class="w-full h-full p-2.5 text-white" />
-            </div>
-        </div>
-    {/snippet}
-</ShopCard> -->
