@@ -1,17 +1,16 @@
 ![banner](./static/banner.png)
 # Meetly
-Dein smarter persönlicher AI-Agent.
+Meetly is a personal AI agent that reminds you of your meetings and provides a summary of the meeting content. It is built using SvelteKit and Tauri for the frontend, and n8n for the backend workflow automation. The app is designed to run on Android devices, but it can also be run on desktop platforms using Tauri or the web version. The app uses the OpenAI Whisper API for transcription and the Gemini Chat Model for summarization.
 
 ## Prerequisites
 - [Node.js](https://nodejs.org/en/download/) (LTS version)
-- [Rust](https://www.rust-lang.org/tools/install) (for Tauri)
-- [Docker](https://docs.docker.com/get-docker/) (for n8n selfhosted)
+- [Docker](https://docs.docker.com/get-docker/) (for n8n)
 
 ## Recommended IDE Setup
 [VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer).
 
 ## Getting Started
-<!-- explain the structure of the application -->
+The application uses Sveltekit and follows the standard Sveltekit project structure. The main entry point is `src/routes/+page.svelte`, and the main layout is in `src/routes/+layout.svelte`. Please refer to the [SvelteKit documentation](https://kit.svelte.dev/docs/introduction) for more information on how to work with SvelteKit.
 
 ### n8n selfhosted Docker Setup
 1. Setup and run n8n in a Docker container:
@@ -36,3 +35,17 @@ npm install
 ```shell
 npm run dev
 ```
+
+## Tauri Android
+
+### Prerequisites
+Please install all the necessary [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/) to set up Tauri and configure the [Android SDK](https://v2.tauri.app/start/prerequisites/#android) as described in the Tauri documentation. 
+
+### Start Android-Emulator in development mode
+Follow the 
+```shell
+npm run tauri android dev
+```
+
+## Further Development
+- add more Agents to the app
