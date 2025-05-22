@@ -19,13 +19,15 @@ export async function loadProfile() {
   const { data: eventData } = await supabase
       .from('user_events')
       .select("event, is_complete")
+      .eq('user_id', currentUser.id);
   
   const { data: coinsData } = await supabase
       .from('user_coins')
       .select("coins")
-      .single()
+      .eq('user_id', currentUser.id)
+      .single();
 
-  if (!profileData) return
+  if (!profileData) return;
 
   userProfile.set({
     displayname: profileData.displayname,
@@ -57,15 +59,19 @@ export async function insertActionById(actionId: number) {
 }
 
 export async function updateCoinsStore() {
-  const { data: coinsData } = await supabase
+  const currentUser = get(user);
+  if (!currentUser?.id) return;
+
+  const { data: coinsData, error } = await supabase
       .from('user_coins')
       .select("coins")
-      .single()
+      .eq('user_id', currentUser.id)
+      .single();
 
   userProfile.update((profile) => {
       if (profile) profile.coins = coinsData?.coins ?? 0;
       return profile;
-  })
+  });
 }
 
 /**
