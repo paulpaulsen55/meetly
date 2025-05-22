@@ -1,10 +1,17 @@
 <script lang="ts">
-    import { Users, Star, Medal } from 'lucide-svelte';
-
+    import { Users, Star, Medal, Trophy } from 'lucide-svelte';
+    import { userProfile } from '$lib/stores';
+    
     export let data;
     let users = data.users || [];
     let error = data.error || '';
 
+    function getUserRank(coins: number): string {
+        if (coins >= 100) return "Gold Rank";
+        if (coins >= 50) return "Silver Rank";
+        return "Bronze Rank";
+    }
+    
     function getMedalColor(index: number): string {
         switch(index) {
             case 0: return "text-yellow-500";
@@ -15,15 +22,44 @@
     }
 </script>
 
-
 <main class="flex flex-col">
-    <!-- Header with friend count -->
+    <!-- Header with title -->
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-3xl font-semibold text-center mt-2 mx-auto">Ranked</h2>
     </div>
-
+    
+    <!-- User Profile Section -->
+    <div class="bg-white rounded-xl p-4 mb-6 flex items-center gap-4 shadow-sm border border-gray-100">
+        <div class="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
+            <Users class="w-7 h-7 text-gray-500" />
+        </div>
+        <div>
+            <h2 class="text-xl font-semibold">{$userProfile?.displayname || 'User'}</h2>
+            <p class="text-sm text-gray-500">{getUserRank($userProfile?.coins || 0)} · {$userProfile?.coins || 0} MeetCoins</p>
+        </div>
+    </div>
+    
+    <!-- Badges Section -->
+    <div class="mb-6">
+        <h3 class="text-2xl text-gray-500 mb-4 pb-2 border-b border-gray-200">Your Badges</h3>
+        {#if data.badge}
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                    <Trophy class="w-5 h-5 text-blue-500" />
+                </div>
+                <div>
+                    <h3 class="font-semibold text-blue-700 mb-0.5">New Badge: {data.badge.titel}</h3>
+                    <p class="text-sm text-blue-600">{data.badge.description}</p>
+                </div>
+            </div>
+        </div>
+    {/if}
+    </div>
+    
+    <!-- Leaderboard Section -->
     <h3 class="text-2xl text-gray-500 mb-4 pb-2 border-b border-gray-200">Leaderboard</h3>
-    <div class="space-y-3 mb-8 overflow-y-auto pr-2">
+    <div class="space-y-3 mb-8 max-h-92 sm:max-h-64 overflow-y-auto pr-2">
         {#if error}
             <p class="text-center text-red-500">{error}</p>
         {/if}
