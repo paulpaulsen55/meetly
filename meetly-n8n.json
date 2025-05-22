@@ -8,7 +8,7 @@
         "responseMode": "responseNode",
         "options": {}
       },
-      "id": "20c76add-86a8-4757-ba0b-ed1ece090c30",
+      "id": "e22f8f2c-8336-42df-868e-4c7520c99ec4",
       "name": "Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1.1,
@@ -23,7 +23,7 @@
         "respondWith": "allIncomingItems",
         "options": {}
       },
-      "id": "0d5ff21a-e4d7-43c2-9e03-c1ab23454ef4",
+      "id": "0516eda3-224c-479b-bbd2-ba8d814e3d19",
       "name": "Respond to Webhook",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
@@ -34,7 +34,7 @@
     },
     {
       "parameters": {},
-      "id": "d37666cf-f9df-4946-b65b-4942c4d0f96d",
+      "id": "c5f62aa8-a2c3-4769-862c-c0fc99eb946c",
       "name": "Data",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
@@ -65,7 +65,7 @@
           "includeBinary": true
         }
       },
-      "id": "d5c99d29-0661-4dc7-aea7-0f5c01c80763",
+      "id": "18e71808-6265-4f0b-b1a1-1ebadae78615",
       "name": "Set with SessionId",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.3,
@@ -94,7 +94,7 @@
         },
         "options": {}
       },
-      "id": "3dd71e8b-b064-41e3-a6ae-6677902ca9d5",
+      "id": "37912f81-f5e8-4216-85f5-cdf506dcbb0e",
       "name": "Set with GeneratedID",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.3,
@@ -128,7 +128,7 @@
         },
         "options": {}
       },
-      "id": "407a99fe-8456-473a-aa03-0f7c0c84b424",
+      "id": "298a92f2-4b11-4165-90a6-c33ff7dcc7b9",
       "name": "If has SessionId",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
@@ -157,7 +157,7 @@
         180,
         680
       ],
-      "id": "6ed25118-6cb6-4aa6-a33e-39e0bce9c4ce",
+      "id": "1f7fac0d-68c4-405b-9ea9-a9c8f107edd7",
       "name": "Set text message"
     },
     {
@@ -224,7 +224,7 @@
         -180,
         540
       ],
-      "id": "99a66b4a-1366-4c74-8d92-399d0873b7d9",
+      "id": "4c6a4d42-bfcd-4a60-a0a7-77b79ddc82c3",
       "name": "Switch text/audio",
       "alwaysOutputData": false
     },
@@ -241,7 +241,7 @@
         20,
         680
       ],
-      "id": "bb630cc4-af52-401e-bb94-933f3d05a283",
+      "id": "8c1c81ec-851d-47bc-8b04-eef96790927f",
       "name": "OpenAI whisper",
       "alwaysOutputData": false,
       "executeOnce": false,
@@ -249,7 +249,7 @@
       "notesInFlow": false,
       "credentials": {
         "openAiApi": {
-          "id": "P7uF65mOoext6ato",
+          "id": "TuWO0oBtdBZNgUWt",
           "name": "OpenAi account"
         }
       }
@@ -274,7 +274,7 @@
         20,
         520
       ],
-      "id": "baf83335-36a4-440a-9717-4b65a5a044ff",
+      "id": "0c19ea30-f558-498f-96f0-fb147f7124d8",
       "name": "Set text message1"
     },
     {
@@ -289,7 +289,7 @@
         0,
         0
       ],
-      "id": "12ca3bed-7085-4e09-86f7-cae0916212c2",
+      "id": "ae982a60-a879-4780-b8ae-7432a9cb092d",
       "name": "Sticky Note"
     },
     {
@@ -298,7 +298,7 @@
         "text": "={{ $json.message }}",
         "hasOutputParser": true,
         "options": {
-          "systemMessage": "=You are a helpful assistant. Extract event information from user input and return it in JSON format.\n\nIMPORTANT RULES:\n1. ALWAYS return a valid JSON with \"date\" and \"title\" fields\n2. For the \"date\" field:\n   - If the input contains natural language date references like \"morgen\", \"heute\", \"tomorrow\", \"today\", etc., provide them in the \"date\" field of the JSON response\n3. For the \"title\" field:\n   - Extract the main event description after removing any date references\n   - If only date is provided without a title, use \"Untitled event\" as the title\n\nExamples:\n- Input: \"morgen kacken\"\n  Output: {\"date\": \"morgen\", \"title\": \"kacken\"}\n- Input: \"heute meeting\"\n  Output: {\"date\": \"heute\", \"title\": \"meeting\"}\n- Input: \"montag zum arzt\"\n  Output: {\"date\": \"montag\", \"title\": \"zum arzt\"}\n\nDo not include explanations in your response, ONLY return the JSON object."
+          "systemMessage": "=You are a helpful assistant. Extract event information from user input and return it in JSON format.\n\nIMPORTANT RULES:\n1. ALWAYS return a valid JSON with \"date\" and \"title\" fields\n2. For the \"date\" field:\n   - If the input contains natural language date references like \"morgen\", \"heute\", \"tomorrow\", \"today\", etc., provide them in the \"date\" field of the JSON response\n3. If no date is provided insert \"today\" in the \"date\" field of the JSON response\n4. For the \"title\" field:\n   - Extract the main event description after removing any date references\n   - If only date is provided without a title, use \"Untitled event\" as the title\n\nExamples:\n- Input: \"morgen gehe ich kacken\"\n  Output: {\"date\": \"Morgen\", \"title\": \"Kacken\"}\n- Input: \"heute habe ich ein meeting\"\n  Output: {\"date\": \"Heute\", \"title\": \"Meeting\"}\n- Input: \"dieter treffe ich am montag\"\n  Output: {\"date\": \"Montag\", \"title\": \"Treffen mit Dieter\"}\n\nDo not include explanations in your response, ONLY return the JSON object."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -307,7 +307,7 @@
         520,
         520
       ],
-      "id": "b6e48fd6-9cd7-4547-a035-7d0bf07584e2",
+      "id": "9568f2e0-8135-4dff-ae80-5132c125bd0c",
       "name": "AI Agent",
       "onError": "continueErrorOutput"
     },
@@ -322,11 +322,11 @@
         520,
         700
       ],
-      "id": "a4790590-a0b8-4e45-8cf9-55f40cf1dc94",
+      "id": "7b27bdb2-c095-4890-95f7-0a7979723d6c",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
-          "id": "Ypd5RzDJLM0Lfh4B",
+          "id": "tsLt2EAunLVpYPml",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -343,7 +343,7 @@
         660,
         740
       ],
-      "id": "be9c0950-9f8f-42cc-b64a-067645a2fc67",
+      "id": "d232353c-dc89-48df-b781-13053f32687c",
       "name": "Auto-fixing Output Parser"
     },
     {
@@ -356,7 +356,7 @@
         860,
         900
       ],
-      "id": "bb94cec8-960c-4587-aa59-072574682c81",
+      "id": "d8520a06-6f39-49f0-ae37-2573315a14e5",
       "name": "Structured Output Parser"
     },
     {
@@ -370,11 +370,11 @@
         680,
         900
       ],
-      "id": "de77699a-a27b-48ca-9cd7-e184f448b43a",
+      "id": "19d5d0cf-2021-4e49-80a2-213ff60fc7c7",
       "name": "Google Gemini Chat Model1",
       "credentials": {
         "googlePalmApi": {
-          "id": "Ypd5RzDJLM0Lfh4B",
+          "id": "tsLt2EAunLVpYPml",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -387,7 +387,7 @@
         320,
         520
       ],
-      "id": "6599efba-8dc9-454e-a5cb-21a9df7802d3",
+      "id": "9924fbf8-03b5-40e4-945c-86bee5f7f39d",
       "name": "message1"
     }
   ],
@@ -573,11 +573,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "5683abb4-5c08-424b-8b0f-48150d7e8e72",
+  "versionId": "239bd4f9-1084-4b3f-899f-4533b857a11d",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "e5c5ecb57167cbf8b7392edbac5a75daf8247bfb13362c335453bb1e5c29a4cf"
+    "instanceId": "0efefaf848cb55b47d610315256d7fa8b63f4f8843777a47ca589bc607a113a5"
   },
-  "id": "GUr11iTYcUxHpTc2",
+  "id": "T5zb3UkO3cdcS6tN",
   "tags": []
 }
