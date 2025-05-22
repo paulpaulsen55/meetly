@@ -16,6 +16,7 @@
     "@supabase/supabase-js": "^2.49.1",
     "@tailwindcss/vite": "^4.0.9",
     "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-notification": "^2.2.2",
     "@tauri-apps/plugin-opener": "^2",
     "date-fns": "^4.1.0",
     "lucide-svelte": "^0.477.0"
