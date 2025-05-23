@@ -82,7 +82,7 @@
     }
 </script>
 
-<div class="h-full flex">
+<div class="flex flex-1 overflow-y-auto">
     <div class="w-full bg-gray-50 border border-gray-200 rounded-3xl p-4 flex flex-col">
         <h2 class="text-2xl text-gray-500 border-b border-gray-200 pb-1 flex-none">Upcoming</h2>
 

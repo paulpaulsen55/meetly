@@ -21,9 +21,11 @@
 
 
 {#if $user}
-    <div class="h-screen flex flex-col bg-white p-4 max-w-md mx-auto">
-        {@render children()}
-        <div class="flex-none mt-auto">
+    <div class="h-screen overflow-hidden flex flex-col bg-white p-4 max-w-md mx-auto">
+        <div class="flex-1 overflow-auto">
+            {@render children()}
+        </div>
+        <div class="mt-auto bottom-0">
             <Navbar />
         </div>
     </div>
