@@ -1,5 +1,6 @@
 import { writable, get } from 'svelte/store';
 import { supabase } from './supabase';
+import { n8nServer } from './stores';
 
 interface WebhookResponse {
     message: string;
@@ -40,7 +41,7 @@ export async function sendWebhook(content: Blob | string): Promise<WebhookRespon
     let message = "";
     let success = false;
 
-    const url = "http://localhost:5678/webhook/981ad22c-97a6-4f32-a0d9-c8e70cebcdb4";
+    const url = get(n8nServer);
 
     try {
         const formData = new FormData();
