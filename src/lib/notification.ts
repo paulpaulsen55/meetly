@@ -1,5 +1,3 @@
-import { isTauri } from "@tauri-apps/api/core"
-
 // Extend the Window interface to include __TAURI__
 declare global {
     interface Window {
