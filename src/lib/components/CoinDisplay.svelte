@@ -3,7 +3,7 @@
     import { userProfile } from "$lib/stores";
 </script>
 
-<div class="flex-1 bg-gradient-to-br from-blue-500/5 to-blue-500/20 rounded-3xl p-5 shadow-sm borderborder-gray-200 flex flex-col justify-between">
+<div class="bg-gradient-to-br from-blue-500/5 to-blue-500/20 rounded-3xl p-5 shadow-sm borderborder-gray-200 flex flex-col justify-between">
     <div>
         <p class="text-gray-500 text-sm font-medium mb-1">MEETCOINS</p>
         <div class="flex items-center gap-2">

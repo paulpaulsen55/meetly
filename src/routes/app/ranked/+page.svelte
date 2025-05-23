@@ -22,14 +22,14 @@
     }
 </script>
 
-<main class="flex flex-col">
+<main class="flex flex-col h-full gap-6">
     <!-- Header with title -->
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex justify-between items-center">
         <h2 class="text-3xl font-semibold text-center mt-2 mx-auto">Ranked</h2>
     </div>
     
     <!-- User Profile Section -->
-    <div class="bg-white rounded-xl p-4 mb-6 flex items-center gap-4 shadow-sm border border-gray-100">
+    <div class="bg-white rounded-xl p-4 flex items-center gap-4 shadow-sm border border-gray-100">
         <div class="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
             <Users class="w-7 h-7 text-gray-500" />
         </div>
@@ -40,26 +40,26 @@
     </div>
     
     <!-- Badges Section -->
-    <div class="mb-6">
-        <h3 class="text-2xl text-gray-500 mb-4 pb-2 border-b border-gray-200">Your Badges</h3>
+    <div class="space-y-4">
+        <h3 class="text-2xl text-gray-500 pb-2 border-b border-gray-200">Your Badges</h3>
         {#if data.badge}
-        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                    <Trophy class="w-5 h-5 text-blue-500" />
-                </div>
-                <div>
-                    <h3 class="font-semibold text-blue-700 mb-0.5">New Badge: {data.badge.titel}</h3>
-                    <p class="text-sm text-blue-600">{data.badge.description}</p>
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                        <Trophy class="w-5 h-5 text-blue-500" />
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-blue-700 mb-0.5">New Badge: {data.badge.titel}</h3>
+                        <p class="text-sm text-blue-600">{data.badge.description}</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    {/if}
+        {/if}
     </div>
     
     <!-- Leaderboard Section -->
-    <h3 class="text-2xl text-gray-500 mb-4 pb-2 border-b border-gray-200">Leaderboard</h3>
-    <div class="space-y-3 mb-8 max-h-92 sm:max-h-64 overflow-y-auto pr-2">
+    <h3 class="text-2xl text-gray-500 pb-2 border-b border-gray-200">Leaderboard</h3>
+    <div class="space-y-3 flex-1 overflow-y-auto pr-2">
         {#if error}
             <p class="text-center text-red-500">{error}</p>
         {/if}

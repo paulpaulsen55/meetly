@@ -12,8 +12,8 @@
     }
 </script>
 
-<h3 class="text-2xl text-gray-500 mb-4 pb-2 border-b border-gray-200">Quests</h3>
-<div class="space-y-3 mb-8">
+<h3 class="text-2xl text-gray-500 pb-2 border-b border-gray-200">Quests</h3>
+<div class="space-y-3 h-full max-h-60 overflow-y-auto">
         {#each quests as quest, i}
             {#if i == activeQuest}
                 <div class="flex flex-col bg-blue-50 rounded-xl p-4 border border-blue-200">
