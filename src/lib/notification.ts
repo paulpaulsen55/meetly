@@ -11,6 +11,7 @@ import {
     sendNotification,
 } from '@tauri-apps/plugin-notification';
 
+const messageInterval = 20000; // 20 seconds
 const messages = [
     "Keep shining, superstar!",
     "You're awesome—don't forget it!",
@@ -54,10 +55,10 @@ async function sendWebNotification(): Promise<void> {
 export async function startMessages(): Promise<void> {
     if (window.__TAURI__) {
         sendTauriNotification();
-        setInterval(sendTauriNotification, 20000);
+        setInterval(sendTauriNotification, messageInterval);
     } else if ("Notification" in window) {
         sendWebNotification();
-        setInterval(sendWebNotification, 20000);
+        setInterval(sendWebNotification, messageInterval);
     } else {
         console.log("Notifications are not supported in this environment.");
     }
