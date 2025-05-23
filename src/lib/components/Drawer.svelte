@@ -2,31 +2,23 @@
     import { X } from "lucide-svelte";
     import { fly } from "svelte/transition";
     import { cubicOut } from "svelte/easing";
-    import { onMount, createEventDispatcher } from "svelte";
+    import { onMount } from "svelte";
     
-    // Mark isOpen as bindable (using Svelte runes here)
     let { children, button, title, isOpen = $bindable(false) } = $props();
 
-    // Create a dispatcher so we can notify when the drawer is closed
-    const dispatch = createEventDispatcher();
-
-    // Drag gesture variables
     let startY = $state(0);
     let currentY = $state(0);
     let dragging = $state(false);
     let drawerElement: HTMLElement | null = $state(null);
     let drawerHeight = $state(0);
-    let drawerTransform = $state(0);
 
     // Add event listeners for drag on component mount
     onMount(() => {
-        // Add passive event listeners for performance
         document.addEventListener("mousemove", handleDrag, { passive: true });
         document.addEventListener("mouseup", handleDragEnd);
         document.addEventListener("touchmove", handleDrag, { passive: true });
         document.addEventListener("touchend", handleDragEnd);
 
-        // Clean up event listeners on component destroy
         return () => {
             document.removeEventListener("mousemove", handleDrag);
             document.removeEventListener("mouseup", handleDragEnd);
@@ -47,16 +39,12 @@
 
     function closeDrawer() {
         isOpen = false;
-        drawerTransform = 0;
-        // Dispatch the close event so the parent resets its state
-        dispatch('close');
         setTimeout(() => {
             document.body.classList.remove("drawer-open");
         }, 300);
     }
 
     function handleDragStart(event: MouseEvent | TouchEvent) {
-        // If we're interacting with form elements, don't start dragging
         if (!drawerElement) return;
 
         // Don't capture on form elements
@@ -85,7 +73,6 @@
         // Only allow dragging down, not up
         if (currentY < 0) currentY = 0;
 
-        drawerTransform = currentY;
         drawerElement.style.transform = `translateY(${currentY}px)`;
     }
 
@@ -100,8 +87,6 @@
         if (currentY > drawerHeight * 0.25) {
             closeDrawer();
         } else {
-            // Otherwise snap back
-            drawerTransform = 0;
             drawerElement.style.transform = "";
         }
     }
