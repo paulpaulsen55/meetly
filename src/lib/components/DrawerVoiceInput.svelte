@@ -7,41 +7,117 @@
     let isRecording = $state(false);
     let audioUrl = $state("");
     let audioBlob: Blob | null = $state(null);
+    let error = $state("");
+    let permissionDenied = $state(false);
+
+    async function checkMicrophonePermission() {
+        try {
+            // Try to get user media to test permissions
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            // If successful, immediately stop all tracks
+            stream.getTracks().forEach(track => track.stop());
+            permissionDenied = false;
+            return true;
+        } catch (err) {
+            console.error("Microphone permission error:", err);
+            permissionDenied = true;
+            error = "Microphone access denied. Please grant permission in your device settings.";
+            return false;
+        }
+    }
 
     function sendAudioWebhook() {
-        if (!audioBlob) return;
+        if (!audioBlob) {
+            error = "No audio recording available to send";
+            return;
+        }
 
+        error = ""; // Clear any previous errors
         loading = true;
-        sendWebhook(audioBlob).finally(() => {
-            loading = false;
-        });
+        sendWebhook(audioBlob)
+            .then(response => {
+                if (!response.success) {
+                    error = "Failed to send audio recording";
+                }
+            })
+            .catch(e => {
+                error = "Error while sending: " + e.message;
+            })
+            .finally(() => {
+                loading = false;
+            });
     }
 
     async function start(){
-        isRecording = true;
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream);
+        try {
+            // First check if we have permission
+            const hasPermission = await checkMicrophonePermission();
+            if (!hasPermission) return;
+            
+            error = ""; // Clear any previous errors
+            isRecording = true;
+            
+            // Check if mediaDevices is available
+            if (!navigator.mediaDevices) {
+                throw new Error("Audio recording is not supported in this browser or context");
+            }
+            
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
 
-        startRecording(mediaRecorder)
+            // Reset audio values when starting new recording
+            if (audioUrl) {
+                URL.revokeObjectURL(audioUrl);
+            }
+            audioUrl = "";
+            audioBlob = null;
+            
+            startRecording(mediaRecorder);
+        } catch (err) {
+            console.error("Error starting recording:", err);
+            error = err instanceof Error ? err.message : "Failed to start recording";
+            isRecording = false;
+        }
     }
 
     async function stop(){
         isRecording = false;
         
         if (mediaRecorder) {
-            const blob = stopRecording(mediaRecorder);
-            
-            if (!blob) return;
+            try {
+                const blob = await stopRecording(mediaRecorder);
+                
+                if (!blob) {
+                    error = "Failed to create recording";
+                    return;
+                }
 
-            audioUrl = URL.createObjectURL(blob);
-        } else{
+                // Store the blob directly in our component state
+                audioBlob = blob;
+                
+                // Create a new URL from the current blob
+                audioUrl = URL.createObjectURL(blob);
+            } catch (err) {
+                console.error("Error stopping recording:", err);
+                error = err instanceof Error ? err.message : "Failed to stop recording";
+            }
+        } else {
             console.error("No media recorder found");
+            error = "No active recording to stop";
         }
     }
 
+    // Check for permission on component initialization
+    checkMicrophonePermission();
 </script>
 
 <div class="text-center">
+    {#if error}
+        <div class="mb-4 p-3 bg-red-100 text-red-800 border border-red-200 rounded">
+            {error}
+        </div>
+    {/if}
+    
     <button
         type="button"
         onclick={isRecording ? stop : start}
@@ -81,20 +157,4 @@
             </button>
         </div>
     {/if}
-
-    <!-- {#if responseMessage}
-        <div 
-            class={`mt-4 p-3 rounded border ${
-                $isSuccess 
-                ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100 dark:border-green-800' 
-                : $isError 
-                ? 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-100 dark:border-red-800'
-                : 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-100'
-            }`}
-            role="status"
-            aria-live="polite"
-        >
-            {$responseMessage}
-        </div>
-    {/if} -->
 </div>

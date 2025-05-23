@@ -1,6 +1,7 @@
 import { writable, get } from 'svelte/store';
 import { supabase } from './supabase';
 import { n8nServer } from './stores';
+import { loadProfile } from './helper';
 
 interface WebhookResponse {
     message: string;
@@ -12,6 +13,9 @@ const audioChunks = writable<Blob[]>([]);
 
 export async function startRecording(recorder: MediaRecorder) {
     try {
+        audioChunks.set([]);
+        audioBlob.set(null);
+
         recorder.onstart = () => {
             audioChunks.set([]);
         };
@@ -21,7 +25,8 @@ export async function startRecording(recorder: MediaRecorder) {
         };
 
         recorder.onstop = () => {
-            const blob = new Blob(get(audioChunks), { type: 'audio/webm' });
+            const chunks = get(audioChunks);
+            const blob = new Blob(chunks, { type: 'audio/webm' });
             audioBlob.set(blob);
         };
 
@@ -31,10 +36,21 @@ export async function startRecording(recorder: MediaRecorder) {
     }
 }
 
-export function stopRecording(recorder: MediaRecorder) {
-    recorder.stop();
-    recorder.stream.getTracks().forEach(track => track.stop());
-    return get(audioBlob);
+export function stopRecording(recorder: MediaRecorder): Promise<Blob | null> {
+    return new Promise((resolve) => {
+        const stopHandler = () => {
+            setTimeout(() => {
+                resolve(get(audioBlob));
+            }, 100);
+            
+            recorder.removeEventListener('stop', stopHandler);
+        };
+        
+        recorder.addEventListener('stop', stopHandler);
+        
+        recorder.stop();
+        recorder.stream.getTracks().forEach(track => track.stop());
+    });
 }
 
 export async function sendWebhook(content: Blob | string): Promise<WebhookResponse> {
@@ -68,19 +84,25 @@ export async function sendWebhook(content: Blob | string): Promise<WebhookRespon
             
             try {
                 let parsedData;
-                try {
-                    const parsed = JSON.parse(responseData);
-                    
-                    if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].output) {
-                        parsedData = parsed[0].output;
-                    } else {
-                        parsedData = JSON.parse(responseData);
+                
+                if (responseData && responseData.trim()) {
+                    try {
+                        const parsed = JSON.parse(responseData);
+                        
+                        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].output) {
+                            parsedData = parsed[0].output;
+                        } else {
+                            parsedData = parsed;
+                        }
+                        
+                        console.log("Parsed webhook response:", parsedData);
+                    } catch (parseError) {
+                        console.error("Error parsing webhook response:", parseError);
+                        parsedData = { error: "Failed to parse response", original: responseData };
                     }
-                    
-                    console.log("Parsed webhook response:", parsedData);
-                } catch (parseError) {
-                    console.error("Error parsing webhook response:", parseError);
-                    parsedData = { error: "Failed to parse response", original: responseData };
+                } else {
+                    console.log("Empty response from webhook");
+                    parsedData = { message: "Empty response" };
                 }
                 
                 const { error } = await supabase
@@ -94,6 +116,7 @@ export async function sendWebhook(content: Blob | string): Promise<WebhookRespon
                 } else {
                     success = true;
                     console.log("Event saved to Supabase successfully");
+                    await loadProfile();
                 }
             } catch (dbError) {
                 console.error("Error connecting to Supabase:", dbError);
