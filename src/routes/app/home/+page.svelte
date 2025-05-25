@@ -5,7 +5,7 @@
     import { Info } from 'lucide-svelte';
 </script>
 
-<main class="flex flex-col h-full gap-6">
+<main class="flex flex-col h-fit gap-6 overflow-y-auto">
     <div class="">
         <Header />
     </div>

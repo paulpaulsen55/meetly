@@ -114,7 +114,7 @@
             role="button"
             tabindex="0"
             bind:this={drawerElement}
-            class="fixed inset-x-0 bottom-0 h-1/3 bg-white shadow-lg rounded-t-3xl z-50 touch-pan-y"
+            class="fixed inset-x-0 bottom-0 h-1/2 bg-white shadow-lg rounded-t-3xl z-50 touch-pan-y"
             in:fly={{ y: 500, duration: 300, easing: cubicOut }}
             out:fly={{ y: 500, duration: 300, easing: cubicOut }}
             onmousedown={handleDragStart}
