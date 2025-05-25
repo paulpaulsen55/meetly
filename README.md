@@ -49,7 +49,7 @@ The application uses Sveltekit and follows the standard Sveltekit project struct
     ![where to find the import button](./static/n8n_import.png)
 4. Set up the credentials for the "OpenAI Whisper" and "Google Gemini Chat Model" Nodes in the workflow:
    - The keys can be found in the .env file [.env file](./.env) as KEY_OPENAI and KEY_GEMINI
-5. Activate the workflow by clicking on the "Activate" button in the top right corner of the n8n UI.
+5. Activate the workflow by clicking on the "Activate" switch in the top right corner of the n8n UI.
 
 ## Webview
 ### Install dependencies
