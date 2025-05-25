@@ -14,10 +14,8 @@ export const load: PageLoad = async ({ depends }) => {
     // Get current user's badges
     const { data: badgesData, error: badgesError } = await supabase
         .from('user_badges')
-        .select('titel, description')
+        .select('title, description')
         .eq('user_id', currentUser?.id || '')
-        .order('user_id', { ascending: false })
-        .limit(1);
     
     return { 
         users: leaderboardData || [],
