@@ -2,7 +2,7 @@
 # Meetly
 Meetly is an intelligent, gamified meeting assistant that transforms how you manage and engage with your calendar. Using AI-powered voice and text input, Meetly automatically extracts meeting details, provides smart reminders, and rewards you for completing events through an engaging gamification system.
 
-**Key Features:**
+### Key Features:
 - 🎤 **Voice & Text Input**: Add events naturally through speech or text
 - 🤖 **AI-Powered Extraction**: Automatic date and title extraction using LLM
 - 🎮 **Gamification System**: Earn coins for completing meetings and events
@@ -10,9 +10,18 @@ Meetly is an intelligent, gamified meeting assistant that transforms how you man
 - 📱 **Smart Notifications**: Daily reminders and event notifications
 - 🏪 **Shop**: Spend earned coins on items
 
-**Platforms:**
+### Platforms:
 - 📱 Android
 - 🌐 Web Browser
+
+### Gamification Elements:
+| Element | Status
+|---------|--------
+| **Currency** | ✅
+| **Quests** | ✅
+| **Badges** | ✅
+| **Notifications** | ✅
+| **Shop** | ✅
 
 ## Architecture
 **Tech Stack:**
