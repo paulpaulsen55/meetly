@@ -8,7 +8,7 @@ Meetly is an intelligent, gamified meeting assistant that transforms how you man
 - 🎮 **Gamification System**: Earn coins for completing meetings and events
 - 👥 **Social Features**: Friend quests, shared challenges, and social rewards
 - 📱 **Smart Notifications**: Daily reminders and event notifications
-- 🏪 **In-Game Store**: Spend earned coins on items
+- 🏪 **Shop**: Spend earned coins on items
 
 **Platforms:**
 - 📱 Android
@@ -39,7 +39,7 @@ The application uses Sveltekit and follows the standard Sveltekit project struct
 3. Create a new workflow and import the [meetly workflow](./meetly-n8n.json) file.
     ![where to find the import button](./static/n8n_import.png)
 4. Set up the credentials for the "OpenAI Whisper" and "Google Gemini Chat Model" Nodes in the workflow:
-   - The key can be found in the .env file (CHANGE!!!)
+   - The keys can be found in the .env file [.env file](./.env) as OPENAI_KEY and GEMINI_KEY
 5. Activate the workflow by clicking on the "Activate" button in the top right corner of the n8n UI.
 
 ## Webview
