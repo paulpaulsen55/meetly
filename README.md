@@ -20,6 +20,8 @@ Meetly is an intelligent, gamified meeting assistant that transforms how you man
 - **Backend**: n8n (workflow automation) + Supabase (database/auth)
 - **AI Services**: OpenAI Whisper (transcription) + Google Gemini (summarization)
 
+Our [presentation](./Meetly.pdf) on Meetly provides further information on the architecture and the gamification elements that have been implemented.
+
 # Setup
 The application uses Sveltekit and follows the standard Sveltekit project structure. The main entry point is `src/routes/+page.svelte`, and the main layout is in `src/routes/+layout.svelte`. Please refer to the [SvelteKit documentation](https://kit.svelte.dev/docs/introduction) for more information on how to work with SvelteKit.
 
