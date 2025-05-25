@@ -33,7 +33,7 @@ The application uses Sveltekit and follows the standard Sveltekit project struct
     docker volume create n8n_data
     docker run -it --rm --name n8n -p 5678:5678 -v n8n_data:/home/node/.n8n docker.n8n.io/n8nio/n8n
     ```
-2. After accessing the [n8n UI](localhost:5678), you need to set up a local account.
+2. After accessing the [n8n UI](http://localhost:5678), you need to set up a local account.
 3. Create a new workflow and import the [meetly workflow](./meetly-n8n.json) file.
     ![where to find the import button](./static/n8n_import.png)
 4. Set up the credentials for the "OpenAI Whisper" and "Google Gemini Chat Model" Nodes in the workflow:
@@ -50,7 +50,7 @@ npm install
 ```shell
 npm run dev
 ```
-When the app is up and running, the Webview can be accessed [here](localhost:1420).
+When the app is up and running, the Webview can be accessed [here](http://localhost:1420).
 
 ## Tauri Android
 For Android, a presigned APK is available for quick testing. However, if you prefer to build and sign your own APK, please follow the detailed instructions below.
