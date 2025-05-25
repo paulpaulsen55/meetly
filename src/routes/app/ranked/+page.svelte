@@ -49,7 +49,7 @@
                         <Trophy class="w-5 h-5 text-blue-500" />
                     </div>
                     <div>
-                        <h3 class="font-semibold text-blue-700 mb-0.5">New Badge: {data.badge.titel}</h3>
+                        <h3 class="font-semibold text-blue-700 mb-0.5">New Badge: {data.badge.title}</h3>
                         <p class="text-sm text-blue-600">{data.badge.description}</p>
                     </div>
                 </div>
