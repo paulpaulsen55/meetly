@@ -64,7 +64,7 @@ npm run dev
 When the app is up and running, the Webview can be accessed [here](http://localhost:1420).
 
 ## Tauri Android
-For Android, a presigned APK is available for quick testing. However, if you prefer to build and sign your own APK, please follow the detailed instructions below.
+For Android, a presigned APK is available for quick testing ([meetly-signed.apk](meetly-signed.apk)). However, if you prefer to build and sign your own APK, please follow the detailed instructions below.
 
 ### Prerequisites
 Please install all the necessary [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/) to set up Tauri and configure the [Android SDK](https://v2.tauri.app/start/prerequisites/#android) as described in the Tauri documentation. 
