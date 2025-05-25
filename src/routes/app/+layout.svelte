@@ -22,7 +22,7 @@
 
 {#if $user}
     <div class="h-screen overflow-hidden flex flex-col bg-white p-4 max-w-md mx-auto">
-        <div class="flex-1 overflow-auto">
+        <div class="flex-1 overflow-y-auto">
             {@render children()}
         </div>
         <div class="mt-auto bottom-0">

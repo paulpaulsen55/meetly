@@ -1,3 +1,3 @@
-package com.tauri.dev
+package com.meetly.dev
 
 class MainActivity : TauriActivity()

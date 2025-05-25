@@ -37,15 +37,24 @@ npm run dev
 ```
 
 ## Tauri Android
+For Android, a presigned APK is available for quick testing. However, if you prefer to build and sign your own APK, please follow the detailed instructions below.
 
 ### Prerequisites
 Please install all the necessary [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/) to set up Tauri and configure the [Android SDK](https://v2.tauri.app/start/prerequisites/#android) as described in the Tauri documentation. 
 
-### Start Android-Emulator in development mode
-Follow the 
+### Start a Android-Emulator in development mode
 ```shell
 npm run tauri android dev
 ```
+
+### Build for Android
+```shell
+npm run tauri android build
+```
+After building, you can find the APK in the `\src-tauri\gen\android\app\build\outputs\apk\universal\release\` directory.
+
+Before installing the APK on your Android device, make sure to enable "Install from unknown sources" in the device settings and sign the APK with your own keystore (follow [this guide](https://randombits.dev/articles/android/signing-with-cmd)).
+
 
 ## Further Development
 - add more Agents to the app

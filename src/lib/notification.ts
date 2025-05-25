@@ -11,6 +11,27 @@ import {
     sendNotification,
 } from '@tauri-apps/plugin-notification';
 
+
+if (window.__TAURI__ && typeof Notification === "undefined") {
+    // Polyfill Notification for Tauri, to prevent errors when Tauri code accesses Notification.
+    window.Notification = class {
+        title: string;
+        options?: NotificationOptions;
+        constructor(title: string, options?: NotificationOptions) {
+            this.title = title;
+            this.options = options;
+            // You can call Tauri's sendNotification if needed here.
+            sendNotification({ title, body: options?.body });
+        }
+        static permission = "granted";
+        static requestPermission(): Promise<string> {
+            // In Tauri, assume permission is granted.
+            return Promise.resolve("granted");
+        }
+    }
+}
+
+
 const messageInterval = 20000; // 20 seconds
 const messages = [
     "Keep shining, superstar!",
@@ -26,17 +47,8 @@ function getRandomMessage(): string {
 }
 
 async function sendTauriNotification(): Promise<void> {
-    let permissionGranted = await isPermissionGranted();
-
-    if (!permissionGranted) {
-        const permission = await requestPermission();
-        permissionGranted = permission === "granted";
-    }
-
-    if (permissionGranted) {
-        const randomMessage = getRandomMessage();
-        sendNotification({ title: "Get back on mettly", body: randomMessage });
-    }
+    const randomMessage = getRandomMessage();
+    sendNotification({ title: "Get back on mettly", body: randomMessage });
 }
 
 async function sendWebNotification(): Promise<void> {
@@ -54,12 +66,22 @@ async function sendWebNotification(): Promise<void> {
 // Starts sending notifications at a set interval based on the environment
 export async function startMessages(): Promise<void> {
     if (window.__TAURI__) {
-        sendTauriNotification();
-        setInterval(sendTauriNotification, messageInterval);
+        alert("moin")
+        let permissionGranted = await isPermissionGranted();
+        if (!permissionGranted) {
+            const permission = await requestPermission();
+            permissionGranted = (permission === "granted");
+        }
+        alert(permissionGranted ? "Tauri notifications are enabled" : "Tauri notifications are not enabled");
+        if (permissionGranted) {
+            alert("Tauri is running, sending notifications every 20 seconds");
+            sendTauriNotification();
+            setInterval(sendTauriNotification, messageInterval);
+        }
     } else if ("Notification" in window) {
         sendWebNotification();
         setInterval(sendWebNotification, messageInterval);
     } else {
-        console.log("Notifications are not supported in this environment.");
+        alert("Notifications are not supported in this environment.");
     }
 }
